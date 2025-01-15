@@ -1,0 +1,166 @@
+[gd_scene load_steps=18 format=3 uid="uid://d0qfe71ghlydg"]
+
+[ext_resource type="Texture2D" uid="uid://d3w32ge402igv" path="res://panorama/purple_nebula.png" id="1_lgks0"]
+[ext_resource type="PackedScene" uid="uid://bbt8wyhyebw1u" path="res://scene/star.tscn" id="3_ry3cy"]
+[ext_resource type="PackedScene" uid="uid://cuj7u8bw2mn73" path="res://scene/scripts/spacestation/space_station.tscn" id="4_5u2ds"]
+[ext_resource type="MeshLibrary" uid="uid://cxu8te5rwagdr" path="res://asteroid_belt.tres" id="5_pc5uv"]
+[ext_resource type="PackedScene" uid="uid://emamuktlvdqw" path="res://planet/planet.tscn" id="7_7std1"]
+[ext_resource type="Script" path="res://UI.gd" id="7_wap4y"]
+[ext_resource type="PackedScene" uid="uid://doj10d1ep56ef" path="res://scene/scripts/ship/ship.tscn" id="7_y28xk"]
+
+[sub_resource type="Shader" id="Shader_u05t7"]
+code = "
+// NOTE: Shader automatically converted from Godot Engine 4.2.2.stable's PanoramaSkyMaterial.
+
+shader_type sky;
+
+uniform sampler2D source_panorama : filter_linear, source_color, hint_default_black;
+uniform sampler2D noise_panorama : filter_linear, source_color, hint_default_black;
+
+void sky() {
+	// rotate
+	vec2 c = SKY_COORDS;
+	c.x += TIME * 0.001;
+	COLOR = texture(source_panorama, SKY_COORDS).rgb + 0.2 * texture(noise_panorama, SKY_COORDS).rgb;
+}
+"
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_3lnc3"]
+shader = SubResource("Shader_u05t7")
+shader_parameter/source_panorama = ExtResource("1_lgks0")
+shader_parameter/noise_panorama = ExtResource("1_lgks0")
+
+[sub_resource type="Sky" id="Sky_kg5co"]
+sky_material = SubResource("ShaderMaterial_3lnc3")
+
+[sub_resource type="Environment" id="Environment_xrpxq"]
+background_mode = 2
+background_energy_multiplier = 0.8
+sky = SubResource("Sky_kg5co")
+glow_enabled = true
+glow_bloom = 0.2
+glow_blend_mode = 1
+adjustment_enabled = true
+adjustment_brightness = 1.05
+adjustment_contrast = 1.05
+adjustment_saturation = 1.3
+
+[sub_resource type="Animation" id="Animation_g6mcg"]
+resource_name = "orbit"
+length = 1000.0
+loop_mode = 1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Planet:rotation")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(996.1),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector3(0, 0, 6.28319)]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_7jlcx"]
+_data = {
+"orbit": SubResource("Animation_g6mcg")
+}
+
+[sub_resource type="Animation" id="Animation_6vnod"]
+resource_name = "rotate"
+length = 150.0
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:rotation")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 150.7),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Vector3(0, 0, 0), Vector3(0, -6.28319, 0)]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_1cihw"]
+_data = {
+"rotate": SubResource("Animation_6vnod")
+}
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_a4e6g"]
+size = Vector2(200, 5000)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_rir6d"]
+albedo_color = Color(0.215686, 1, 1, 1)
+
+[node name="World" type="Node3D"]
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("Environment_xrpxq")
+
+[node name="Star" parent="." instance=ExtResource("3_ry3cy")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3770.46, 0, 1063.68)
+cast_shadow = 0
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="Star"]
+transform = Transform3D(-0.866025, 0.25, 0.433013, 1.51421e-07, 0.866025, -0.5, -0.5, -0.433012, -0.75, 0, 0, 0)
+light_color = Color(1, 0.545098, 0.247059, 1)
+shadow_enabled = true
+shadow_opacity = 0.9
+shadow_blur = 0.4
+directional_shadow_max_distance = 1000.0
+
+[node name="Planet" parent="Star" instance=ExtResource("7_7std1")]
+transform = Transform3D(1, -1.74846e-07, 0, 1.74846e-07, 1, 0, 0, 0, 1, 4177.76, 215.95, -1256.68)
+
+[node name="AnimationPlayer2" type="AnimationPlayer" parent="Star"]
+libraries = {
+"": SubResource("AnimationLibrary_7jlcx")
+}
+autoplay = "orbit"
+
+[node name="SpaceStation" parent="." instance=ExtResource("4_5u2ds")]
+transform = Transform3D(-40.4504, 0, 29.3899, 0, 50, 0, -29.3899, 0, -40.4504, 1303.69, 54.9302, 70.5929)
+
+[node name="GridMap" type="GridMap" parent="SpaceStation"]
+transform = Transform3D(-0.809008, 0, -0.587798, 0, 1, 0, 0.587798, 0, -0.809008, 0, 0, 0)
+visible = false
+mesh_library = ExtResource("5_pc5uv")
+cell_size = Vector3(5, 5, 5)
+data = {
+"cells": PackedInt32Array(1, 13, 1114112, 12, 5, 786432, 15, 65531, 983040, 10, 65522, 196608, 1, 65521, 131072, 65529, 65524, 1179648, 65520, 65527, 524288, 65518, 0, 720896, 65526, 12, 655360, 131060, 6, 1048576, 131060, 65533, 1245184, 131060, 65524, 262144, 65536, 65518, 458752, 65550, 65524, 720896, 65554, 65533, 196608, 65544, 6, 131072, 65543, 11, 1179648, 131066, 15, 1114112, -16, 11, 1114112, -21, 3, 786432, -13, 65527, 983040, -1, 65522, 196608, -65530, 65517, 131072, -65517, 65527, 1179648, -65520, 1, 720896, -65532, 10, 720896, 65522, 9, 720898, 65516, 7, 983042, 65520, 4, 917506, 65515, 65533, 1245186, 65518, 65531, 1179650, 65520, 65524, 1114114, 65526, 65526, 786434, 65527, 65520, 983042, 65532, 65521, 196610, 3, 65522, 131074, 3, 65519, 1179650, 9, 65521, 1114114, 14, 65527, 786434, 18, 65528, 983042, 16, 65534, 196610, 12, 1, 131074, 6, 9, 1179650, 10, 9, 1114114, 65533, 14, 786434, 65528, 13, 983042, 131056, 8, 983042, 131054, 2, 196610, 131057, 65533, 131074, 131059, 65529, 1179650, 131062, 65524, 1114114, 131069, 65522, 786434, 65541, 65523, 983042, 65549, 65526, 196610, 65551, 0, 131074, 65538, 10, 1179650, 131067, 13, 1114114, 131059, 11, 786434)
+}
+metadata/_editor_floor_ = Vector3(0, 0, 0)
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="SpaceStation/GridMap"]
+libraries = {
+"": SubResource("AnimationLibrary_1cihw")
+}
+
+[node name="UI" type="Control" parent="."]
+layout_mode = 3
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+script = ExtResource("7_wap4y")
+
+[node name="AsteroidOre" type="Label" parent="UI"]
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 23.0
+
+[node name="Speed" type="Label" parent="UI"]
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 23.0
+
+[node name="Plane" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -56.1801, 0)
+visible = false
+mesh = SubResource("PlaneMesh_a4e6g")
+surface_material_override/0 = SubResource("StandardMaterial3D_rir6d")
+
+[node name="Ship" parent="." groups=["ship"] instance=ExtResource("7_y28xk")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -2513.23)
+max_speed = 200.0

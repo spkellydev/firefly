@@ -1,0 +1,134 @@
+[gd_scene load_steps=11 format=3 uid="uid://bbt8wyhyebw1u"]
+
+[ext_resource type="Texture2D" uid="uid://7yygptio2b3x" path="res://assets/textures/8k_sun.jpg" id="1_7vem6"]
+[ext_resource type="Script" path="res://scene/scripts/ship/TargetReticles.gd" id="2_31r62"]
+[ext_resource type="Texture2D" uid="uid://n0w4bkuhtlcv" path="res://assets/crosshairs/crosshair180.png" id="3_e5xbu"]
+[ext_resource type="Texture2D" uid="uid://bnty2a6epo5yl" path="res://assets/crosshairs/crosshair179.png" id="4_edmp7"]
+[ext_resource type="Texture2D" uid="uid://crc4o4via0rcb" path="res://assets/crosshairs/crosshair022.png" id="5_o4omb"]
+
+[sub_resource type="Shader" id="Shader_b7iea"]
+code = "// NOTE: Shader automatically converted from Godot Engine 4.2.2.stable's StandardMaterial3D.
+
+shader_type spatial;
+render_mode blend_mix,depth_draw_opaque,cull_back,diffuse_burley,specular_schlick_ggx;
+uniform vec4 albedo : source_color;
+uniform sampler2D texture_albedo : source_color,filter_linear_mipmap,repeat_enable;
+uniform float point_size : hint_range(0,128);
+uniform float roughness : hint_range(0,1);
+uniform sampler2D texture_metallic : hint_default_white,filter_linear_mipmap,repeat_enable;
+uniform vec4 metallic_texture_channel;
+uniform sampler2D texture_roughness : hint_roughness_r,filter_linear_mipmap,repeat_enable;
+uniform float specular;
+uniform float metallic;
+uniform sampler2D texture_emission : source_color, hint_default_black,filter_linear_mipmap,repeat_enable;
+uniform vec4 emission : source_color;
+uniform float emission_energy;
+uniform vec3 uv1_scale;
+uniform vec3 uv1_offset;
+uniform vec3 uv2_scale;
+uniform vec3 uv2_offset;
+
+
+void vertex() {
+	UV=UV*uv1_scale.xy+uv1_offset.xy;
+	// SURFACE BUBBLING / SOLAR FLARE
+	VERTEX.y += sin(TIME * 0.5 + (VERTEX.x + VERTEX.z) * 0.2) * 10.0;
+	VERTEX.x += sin(TIME * 0.5 + (VERTEX.y + VERTEX.z) * 0.2) * 10.0;
+	VERTEX.z += sin(TIME * 0.5 + (VERTEX.x + VERTEX.y) * 0.2) * 10.0;
+}
+
+
+
+
+
+
+void fragment() {
+	vec2 base_uv = UV;
+	vec4 albedo_tex = texture(texture_albedo,base_uv);
+	ALBEDO = albedo.rgb * albedo_tex.rgb;
+	float metallic_tex = dot(texture(texture_metallic,base_uv),metallic_texture_channel);
+	METALLIC = metallic_tex * metallic;
+	vec4 roughness_texture_channel = vec4(1.0,0.0,0.0,0.0);
+	float roughness_tex = dot(texture(texture_roughness,base_uv),roughness_texture_channel);
+	ROUGHNESS = roughness_tex * roughness;
+	SPECULAR = specular;
+	vec3 emission_tex = texture(texture_emission,base_uv).rgb;
+	EMISSION = (emission.rgb+emission_tex)*emission_energy;
+}
+"
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_bcm7b"]
+render_priority = 0
+shader = SubResource("Shader_b7iea")
+shader_parameter/albedo = Color(1, 1, 1, 1)
+shader_parameter/point_size = 1.0
+shader_parameter/roughness = 1.0
+shader_parameter/metallic_texture_channel = null
+shader_parameter/specular = 0.5
+shader_parameter/metallic = 0.0
+shader_parameter/emission = Color(0, 0, 0, 1)
+shader_parameter/emission_energy = 2.0
+shader_parameter/uv1_scale = Vector3(1, 1, 1)
+shader_parameter/uv1_offset = Vector3(0, 0, 0)
+shader_parameter/uv2_scale = Vector3(1, 1, 1)
+shader_parameter/uv2_offset = Vector3(0, 0, 0)
+shader_parameter/texture_albedo = ExtResource("1_7vem6")
+shader_parameter/texture_emission = ExtResource("1_7vem6")
+
+[sub_resource type="SphereMesh" id="SphereMesh_jk87r"]
+material = SubResource("ShaderMaterial_bcm7b")
+radius = 1000.0
+height = 2000.0
+
+[sub_resource type="Animation" id="Animation_5m06f"]
+resource_name = "rotate"
+length = 1000.0
+loop_mode = 1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:rotation")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 995.2),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Vector3(0, 0, 0), Vector3(0, 6.28319, 0)]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_cs2yt"]
+_data = {
+"rotate": SubResource("Animation_5m06f")
+}
+
+[node name="Star" type="MeshInstance3D"]
+mesh = SubResource("SphereMesh_jk87r")
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+libraries = {
+"": SubResource("AnimationLibrary_cs2yt")
+}
+autoplay = "rotate"
+
+[node name="TargetReticles" type="Node3D" parent="."]
+script = ExtResource("2_31r62")
+
+[node name="TargetReticle" type="TextureRect" parent="TargetReticles"]
+modulate = Color(1, 1, 1, 0.156863)
+offset_right = 40.0
+offset_bottom = 40.0
+texture = ExtResource("3_e5xbu")
+
+[node name="MainReticle" type="TextureRect" parent="TargetReticles"]
+modulate = Color(1, 1, 1, 0.156863)
+offset_right = 40.0
+offset_bottom = 40.0
+texture = ExtResource("4_edmp7")
+
+[node name="OffscreenReticle" type="TextureRect" parent="TargetReticles"]
+modulate = Color(1, 1, 1, 0.392157)
+offset_right = 40.0
+offset_bottom = 40.0
+pivot_offset = Vector2(32, 32)
+texture = ExtResource("5_o4omb")
