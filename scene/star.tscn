@@ -77,8 +77,8 @@ shader_parameter/texture_emission = ExtResource("1_7vem6")
 
 [sub_resource type="SphereMesh" id="SphereMesh_jk87r"]
 material = SubResource("ShaderMaterial_bcm7b")
-radius = 1000.0
-height = 2000.0
+radius = 5000.0
+height = 10000.0
 
 [sub_resource type="Animation" id="Animation_5m06f"]
 resource_name = "rotate"

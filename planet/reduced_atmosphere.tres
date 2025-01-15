@@ -1,0 +1,8 @@
+[gd_resource type="SphereMesh" load_steps=2 format=3 uid="uid://c2x5ue6vl7nw4"]
+
+[ext_resource type="Material" uid="uid://dhgolpj2rwhjk" path="res://planet/default_atmosphere.tres" id="1_2xc6e"]
+
+[resource]
+material = ExtResource("1_2xc6e")
+radius = 175.0
+height = 350.0

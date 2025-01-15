@@ -45,8 +45,8 @@ class_name PlanetData extends Resource
 	set(n):
 		biome_blend = n
 		emit_signal("changed")
-var min_height := 99999.0
-var max_height := 0.0
+@export var min_height := 99999.0
+@export var max_height := 0.0
 
 func point_on_planet(point_on_sphere : Vector3) -> Vector3:
 	if planet_noise == null:

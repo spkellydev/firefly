@@ -34,13 +34,33 @@ func _physics_process(_delta):
 			if obj.name == "asteroid_collider":
 				obj.get_parent().queue_free()
 				Inventory.asteroid_ore += 1
-	
+
+func maintain_lock():
+	pass
+
+func _input(_event):
+	if get_parent().has_node("Scannable"):
+		if Input.is_mouse_button_pressed(MOUSE_BUTTON_RIGHT):
+			if $Info.visible:
+				$Info.visible = false
+				return
+			else:
+				if camera.is_position_in_frustum(get_parent().global_position):
+					$Info.position = target_reticle.position + Vector2(20, 20)
+					$Info.visible = true
+
 func _process(_delta):
 	if camera.is_position_in_frustum(global_position):
 		target_reticle.show()
 		offscreen_reticle.hide()
 		var _ret_pos = camera.unproject_position(global_position)
 		target_reticle.position = get_viewport().get_mouse_position() - reticle_offset
+		
+		# lock onto starbase reticle
+		if get_parent().is_in_group("starbase"):
+			target_reticle.position = get_viewport().get_mouse_position() - reticle_offset
+			var angle = Vector2.UP.angle_to(target_reticle.position)
+			target_reticle.rotation = angle
 		# main reticle lags behind the target position, mouse
 		main_reticle.position = lerp(main_reticle.position, target_reticle.position, 0.1)
 	else:

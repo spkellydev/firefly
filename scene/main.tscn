@@ -1,12 +1,15 @@
-[gd_scene load_steps=18 format=3 uid="uid://d0qfe71ghlydg"]
+[gd_scene load_steps=22 format=3 uid="uid://d0qfe71ghlydg"]
 
 [ext_resource type="Texture2D" uid="uid://d3w32ge402igv" path="res://panorama/purple_nebula.png" id="1_lgks0"]
+[ext_resource type="Script" path="res://scene/OrbitAnchor.gd" id="3_2ho2d"]
 [ext_resource type="PackedScene" uid="uid://bbt8wyhyebw1u" path="res://scene/star.tscn" id="3_ry3cy"]
 [ext_resource type="PackedScene" uid="uid://cuj7u8bw2mn73" path="res://scene/scripts/spacestation/space_station.tscn" id="4_5u2ds"]
+[ext_resource type="Resource" uid="uid://bjsgraegcofae" path="res://planet/habitable_planet.tres" id="5_844ft"]
 [ext_resource type="MeshLibrary" uid="uid://cxu8te5rwagdr" path="res://asteroid_belt.tres" id="5_pc5uv"]
 [ext_resource type="PackedScene" uid="uid://emamuktlvdqw" path="res://planet/planet.tscn" id="7_7std1"]
 [ext_resource type="Script" path="res://UI.gd" id="7_wap4y"]
 [ext_resource type="PackedScene" uid="uid://doj10d1ep56ef" path="res://scene/scripts/ship/ship.tscn" id="7_y28xk"]
+[ext_resource type="Resource" uid="uid://dr0qg76jt6bik" path="res://planet/lava.tres" id="8_gk5fs"]
 
 [sub_resource type="Shader" id="Shader_u05t7"]
 code = "
@@ -45,25 +48,17 @@ adjustment_brightness = 1.05
 adjustment_contrast = 1.05
 adjustment_saturation = 1.3
 
+[sub_resource type="Animation" id="Animation_mq05u"]
+length = 0.001
+
 [sub_resource type="Animation" id="Animation_g6mcg"]
 resource_name = "orbit"
-length = 1000.0
+length = 1200.0
 loop_mode = 1
-tracks/0/type = "value"
-tracks/0/imported = false
-tracks/0/enabled = true
-tracks/0/path = NodePath("Planet:rotation")
-tracks/0/interp = 1
-tracks/0/loop_wrap = true
-tracks/0/keys = {
-"times": PackedFloat32Array(996.1),
-"transitions": PackedFloat32Array(1),
-"update": 0,
-"values": [Vector3(0, 0, 6.28319)]
-}
 
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_7jlcx"]
 _data = {
+"RESET": SubResource("Animation_mq05u"),
 "orbit": SubResource("Animation_g6mcg")
 }
 
@@ -99,31 +94,60 @@ albedo_color = Color(0.215686, 1, 1, 1)
 [node name="WorldEnvironment" type="WorldEnvironment" parent="."]
 environment = SubResource("Environment_xrpxq")
 
-[node name="Star" parent="." instance=ExtResource("3_ry3cy")]
+[node name="SolarSystem" type="Node3D" parent="."]
+
+[node name="Star" parent="SolarSystem" instance=ExtResource("3_ry3cy")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3770.46, 0, 1063.68)
 cast_shadow = 0
+skeleton = NodePath("../..")
 
-[node name="DirectionalLight3D" type="DirectionalLight3D" parent="Star"]
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="SolarSystem/Star"]
 transform = Transform3D(-0.866025, 0.25, 0.433013, 1.51421e-07, 0.866025, -0.5, -0.5, -0.433012, -0.75, 0, 0, 0)
 light_color = Color(1, 0.545098, 0.247059, 1)
 shadow_enabled = true
 shadow_opacity = 0.9
 shadow_blur = 0.4
-directional_shadow_max_distance = 1000.0
+directional_shadow_max_distance = 100000.0
 
-[node name="Planet" parent="Star" instance=ExtResource("7_7std1")]
-transform = Transform3D(1, -1.74846e-07, 0, 1.74846e-07, 1, 0, 0, 0, 1, 4177.76, 215.95, -1256.68)
-
-[node name="AnimationPlayer2" type="AnimationPlayer" parent="Star"]
+[node name="AnimationPlayer2" type="AnimationPlayer" parent="SolarSystem/Star"]
 libraries = {
 "": SubResource("AnimationLibrary_7jlcx")
 }
 autoplay = "orbit"
 
-[node name="SpaceStation" parent="." instance=ExtResource("4_5u2ds")]
-transform = Transform3D(-40.4504, 0, 29.3899, 0, 50, 0, -29.3899, 0, -40.4504, 1303.69, 54.9302, 70.5929)
+[node name="OrbitAnchor4" type="Node3D" parent="SolarSystem/Star"]
+script = ExtResource("3_2ho2d")
+rotation_speed = 0.2
 
-[node name="GridMap" type="GridMap" parent="SpaceStation"]
+[node name="MoonOrbit" type="Node3D" parent="SolarSystem/Star/OrbitAnchor4"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 46779, 215.95, -2973.34)
+script = ExtResource("3_2ho2d")
+
+[node name="Planet3" parent="SolarSystem/Star/OrbitAnchor4/MoonOrbit" instance=ExtResource("7_7std1")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -22919.2, 215.95, -31.0896)
+planet_data = ExtResource("8_gk5fs")
+
+[node name="Moon2Orbit" type="Node3D" parent="SolarSystem/Star/OrbitAnchor4"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 46779, 215.95, -2973.34)
+script = ExtResource("3_2ho2d")
+rotation_speed = 0.08
+
+[node name="Planet4" parent="SolarSystem/Star/OrbitAnchor4/Moon2Orbit" instance=ExtResource("7_7std1")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 34893.5, 215.95, -275.695)
+planet_data = ExtResource("8_gk5fs")
+
+[node name="Planet2" parent="SolarSystem/Star/OrbitAnchor4" instance=ExtResource("7_7std1")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 46779, 215.95, -2973.34)
+planet_data = ExtResource("5_844ft")
+
+[node name="SpaceStationOrbit" type="Node3D" parent="SolarSystem/Star/OrbitAnchor4/Planet2"]
+script = ExtResource("3_2ho2d")
+rotation_speed = 0.001
+
+[node name="SpaceStation" parent="SolarSystem/Star/OrbitAnchor4/Planet2/SpaceStationOrbit" instance=ExtResource("4_5u2ds")]
+transform = Transform3D(-40.4504, 0, 29.3899, 0, 50, 0, -29.3899, 0, -40.4504, -14763.6, 54.9302, -18.2751)
+
+[node name="GridMap" type="GridMap" parent="SolarSystem/Star/OrbitAnchor4/Planet2/SpaceStationOrbit/SpaceStation"]
 transform = Transform3D(-0.809008, 0, -0.587798, 0, 1, 0, 0.587798, 0, -0.809008, 0, 0, 0)
 visible = false
 mesh_library = ExtResource("5_pc5uv")
@@ -133,7 +157,7 @@ data = {
 }
 metadata/_editor_floor_ = Vector3(0, 0, 0)
 
-[node name="AnimationPlayer" type="AnimationPlayer" parent="SpaceStation/GridMap"]
+[node name="AnimationPlayer" type="AnimationPlayer" parent="SolarSystem/Star/OrbitAnchor4/Planet2/SpaceStationOrbit/SpaceStation/GridMap"]
 libraries = {
 "": SubResource("AnimationLibrary_1cihw")
 }
@@ -162,5 +186,6 @@ mesh = SubResource("PlaneMesh_a4e6g")
 surface_material_override/0 = SubResource("StandardMaterial3D_rir6d")
 
 [node name="Ship" parent="." groups=["ship"] instance=ExtResource("7_y28xk")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -2513.23)
-max_speed = 200.0
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 14567.4, 0, -1179.57)
+max_speed = 1000.0
+throttle = 350.0

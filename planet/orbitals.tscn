@@ -1,0 +1,165 @@
+[gd_scene load_steps=26 format=3 uid="uid://l6tua3v8p35"]
+
+[ext_resource type="Script" path="res://scene/OrbitAnchor.gd" id="1_gyki4"]
+[ext_resource type="PackedScene" uid="uid://cuj7u8bw2mn73" path="res://scene/scripts/spacestation/space_station.tscn" id="2_5wcix"]
+[ext_resource type="MeshLibrary" uid="uid://cxu8te5rwagdr" path="res://asteroid_belt.tres" id="3_fp535"]
+[ext_resource type="PackedScene" uid="uid://gsufqb7uco45" path="res://planet/moon.tscn" id="4_3mpf6"]
+[ext_resource type="Script" path="res://planet/planet_biome.gd" id="5_rpffb"]
+[ext_resource type="Script" path="res://planet/planet_noise.gd" id="6_bhfa5"]
+[ext_resource type="Script" path="res://planet/planet_data.gd" id="7_jpjor"]
+
+[sub_resource type="Animation" id="Animation_6vnod"]
+resource_name = "rotate"
+length = 150.0
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:rotation")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 150.7),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Vector3(0, 0, 0), Vector3(0, -6.28319, 0)]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_1cihw"]
+_data = {
+"rotate": SubResource("Animation_6vnod")
+}
+
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_eq1ht"]
+fractal_octaves = 2
+fractal_lacunarity = 7.18
+fractal_gain = 7.145
+fractal_weighted_strength = 0.88
+domain_warp_enabled = true
+domain_warp_type = 1
+domain_warp_frequency = 5.175
+domain_warp_fractal_type = 2
+domain_warp_fractal_octaves = 1
+
+[sub_resource type="Gradient" id="Gradient_4ytiu"]
+colors = PackedColorArray(1, 0, 0.0196078, 1, 0.31949, 0.0521335, 0.0792992, 1)
+
+[sub_resource type="GradientTexture1D" id="GradientTexture1D_jdj1o"]
+gradient = SubResource("Gradient_4ytiu")
+
+[sub_resource type="Resource" id="Resource_wie0y"]
+script = ExtResource("5_rpffb")
+gradient = SubResource("GradientTexture1D_jdj1o")
+start_height = 0.1
+
+[sub_resource type="Gradient" id="Gradient_o88b1"]
+colors = PackedColorArray(0, 0, 0, 1, 0.902973, 0.583192, 0.129458, 1)
+
+[sub_resource type="GradientTexture1D" id="GradientTexture1D_6n54y"]
+gradient = SubResource("Gradient_o88b1")
+
+[sub_resource type="Resource" id="Resource_1aury"]
+script = ExtResource("5_rpffb")
+gradient = SubResource("GradientTexture1D_6n54y")
+start_height = 1.0
+
+[sub_resource type="Gradient" id="Gradient_3ma36"]
+offsets = PackedFloat32Array(1)
+colors = PackedColorArray(1, 0, 0, 1)
+
+[sub_resource type="GradientTexture1D" id="GradientTexture1D_pijmm"]
+gradient = SubResource("Gradient_3ma36")
+
+[sub_resource type="Resource" id="Resource_tg0hq"]
+script = ExtResource("5_rpffb")
+gradient = SubResource("GradientTexture1D_pijmm")
+start_height = 0.5
+
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_qrpro"]
+fractal_gain = 0.6
+
+[sub_resource type="Resource" id="Resource_d7t7l"]
+script = ExtResource("6_bhfa5")
+min_height = 0.2
+amplitude = 1.0
+noise_map = SubResource("FastNoiseLite_qrpro")
+use_first_layer_as_mask = false
+
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_h6wde"]
+frequency = 0.0001
+fractal_type = 2
+fractal_octaves = 8
+fractal_lacunarity = 3.34
+
+[sub_resource type="Resource" id="Resource_x1fwu"]
+script = ExtResource("6_bhfa5")
+min_height = 0.8
+amplitude = 0.5
+noise_map = SubResource("FastNoiseLite_h6wde")
+use_first_layer_as_mask = true
+
+[sub_resource type="Resource" id="Resource_7q6hx"]
+resource_local_to_scene = true
+script = ExtResource("7_jpjor")
+radius = 75
+resolution = 40
+planet_noise = Array[ExtResource("6_bhfa5")]([SubResource("Resource_d7t7l"), SubResource("Resource_x1fwu")])
+biomes = Array[ExtResource("5_rpffb")]([SubResource("Resource_wie0y"), SubResource("Resource_1aury"), SubResource("Resource_tg0hq")])
+biome_noise = SubResource("FastNoiseLite_eq1ht")
+biome_amplitude = 1.0
+biome_offset = 0.0
+biome_blend = 2.0
+min_height = 129.881
+max_height = 157.121
+
+[sub_resource type="Resource" id="Resource_oyl6o"]
+resource_local_to_scene = true
+script = ExtResource("7_jpjor")
+radius = 75
+resolution = 40
+planet_noise = Array[ExtResource("6_bhfa5")]([SubResource("Resource_d7t7l"), SubResource("Resource_x1fwu")])
+biomes = Array[ExtResource("5_rpffb")]([SubResource("Resource_wie0y"), SubResource("Resource_1aury"), SubResource("Resource_tg0hq")])
+biome_noise = SubResource("FastNoiseLite_eq1ht")
+biome_amplitude = 1.0
+biome_offset = 0.0
+biome_blend = 2.0
+min_height = 129.881
+max_height = 157.121
+
+[node name="Orbitals" type="Node3D"]
+
+[node name="SpaceStationOrbit" type="Node3D" parent="."]
+script = ExtResource("1_gyki4")
+rotation_speed = 0.001
+
+[node name="SpaceStation" parent="SpaceStationOrbit" instance=ExtResource("2_5wcix")]
+transform = Transform3D(-40.4504, 0, 29.3899, 0, 50, 0, -29.3899, 0, -40.4504, -14763.6, 54.9302, -18.2751)
+
+[node name="GridMap" type="GridMap" parent="SpaceStationOrbit/SpaceStation"]
+transform = Transform3D(-0.809008, 0, -0.587798, 0, 1, 0, 0.587798, 0, -0.809008, 0, 0, 0)
+visible = false
+mesh_library = ExtResource("3_fp535")
+cell_size = Vector3(5, 5, 5)
+data = {
+"cells": PackedInt32Array(1, 13, 1114112, 12, 5, 786432, 15, 65531, 983040, 10, 65522, 196608, 1, 65521, 131072, 65529, 65524, 1179648, 65520, 65527, 524288, 65518, 0, 720896, 65526, 12, 655360, 131060, 6, 1048576, 131060, 65533, 1245184, 131060, 65524, 262144, 65536, 65518, 458752, 65550, 65524, 720896, 65554, 65533, 196608, 65544, 6, 131072, 65543, 11, 1179648, 131066, 15, 1114112, -16, 11, 1114112, -21, 3, 786432, -13, 65527, 983040, -1, 65522, 196608, -65530, 65517, 131072, -65517, 65527, 1179648, -65520, 1, 720896, -65532, 10, 720896, 65522, 9, 720898, 65516, 7, 983042, 65520, 4, 917506, 65515, 65533, 1245186, 65518, 65531, 1179650, 65520, 65524, 1114114, 65526, 65526, 786434, 65527, 65520, 983042, 65532, 65521, 196610, 3, 65522, 131074, 3, 65519, 1179650, 9, 65521, 1114114, 14, 65527, 786434, 18, 65528, 983042, 16, 65534, 196610, 12, 1, 131074, 6, 9, 1179650, 10, 9, 1114114, 65533, 14, 786434, 65528, 13, 983042, 131056, 8, 983042, 131054, 2, 196610, 131057, 65533, 131074, 131059, 65529, 1179650, 131062, 65524, 1114114, 131069, 65522, 786434, 65541, 65523, 983042, 65549, 65526, 196610, 65551, 0, 131074, 65538, 10, 1179650, 131067, 13, 1114114, 131059, 11, 786434)
+}
+metadata/_editor_floor_ = Vector3(0, 0, 0)
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="SpaceStationOrbit/SpaceStation/GridMap"]
+libraries = {
+"": SubResource("AnimationLibrary_1cihw")
+}
+
+[node name="MoonOrbit" type="Node3D" parent="."]
+script = ExtResource("1_gyki4")
+
+[node name="Planet" parent="MoonOrbit" instance=ExtResource("4_3mpf6")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -22919.2, 215.95, -31.0897)
+planet_data = SubResource("Resource_7q6hx")
+
+[node name="Moon2Orbit" type="Node3D" parent="."]
+script = ExtResource("1_gyki4")
+rotation_speed = 0.08
+
+[node name="Planet" parent="Moon2Orbit" instance=ExtResource("4_3mpf6")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 34893.5, 215.95, -275.695)
+planet_data = SubResource("Resource_oyl6o")

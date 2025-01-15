@@ -22,6 +22,8 @@ var in_orbit : bool = false
 @onready var ship_body : Node3D = $ShipBody;
 @onready var flames_left : Flames = $ShipBody/FlamesLeft;
 @onready var flames_right : Flames = $ShipBody/FlamesRight;
+@onready var horizon_lock = $HorizonLock
+
 const BACKWARD_RATIO = 0.5;
 
 func _ready():
@@ -38,10 +40,11 @@ func _input(_event : InputEvent):
 		Inventory.speed = 0.0
 		return
 	if Input.is_action_pressed("brake"):
-		forward_speed = lerp(forward_speed, 0.0, 0.1)
+		forward_speed = lerp(forward_speed, forward_speed / 4, 0.1)
 	if Input.is_action_pressed("land"):
-		forward_speed = lerp(forward_speed, 0.0, 0.9)
-		acceleration = 0.0
+		if forward_speed != 0.0:
+			forward_speed = lerp(forward_speed, 0.0, 0.9)
+			acceleration = 0.0
 	if Input.is_action_pressed("throttle"):
 		if forward_speed < forward_speed + throttle:
 			acceleration = 0.6
@@ -92,8 +95,6 @@ func _get_relative_mouse() -> Vector2:
 	return mouse_direction / size;
 
 func rotate_ship(p, y, r):
-	if in_orbit:
-		return
 	# Rotate Ship
 	var ship_basis = Basis.IDENTITY;
 	var s = ship_body.scale;
@@ -105,7 +106,12 @@ func rotate_ship(p, y, r):
 	ship_body.scale = s;
 	
 func _process(delta):
-	rotate_ship(pitch(), yaw(), roll())
+	if !in_orbit:
+		rotate_ship(pitch(), yaw(), roll())
+		
+	if horizon_lock.is_colliding():
+		var collider : Node3D = horizon_lock.get_collider() as Node3D
+		
 	move(delta)
 	if get_parent().name == "LandingZone":
 		acceleration = 0.0

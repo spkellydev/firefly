@@ -1,7 +1,9 @@
-[gd_scene load_steps=25 format=3 uid="uid://cuj7u8bw2mn73"]
+[gd_scene load_steps=27 format=3 uid="uid://cuj7u8bw2mn73"]
 
 [ext_resource type="Shader" path="res://assets/shaders/toon.gdshader" id="1_7iw02"]
 [ext_resource type="Script" path="res://scene/scripts/spacestation/space_station.gd" id="1_y2xfb"]
+[ext_resource type="Script" path="res://scene/scripts/ship/TargetReticles.gd" id="3_e81dr"]
+[ext_resource type="Texture2D" uid="uid://bhimdu3g6758a" path="res://assets/crosshairs/crosshair023.png" id="4_4aco8"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_2hpdj"]
 resource_name = "Station_Base"
@@ -253,7 +255,7 @@ albedo_color = Color(1, 1, 0.427451, 0.403922)
 [sub_resource type="BoxShape3D" id="BoxShape3D_5xp70"]
 size = Vector3(1, 0.938354, 0.794434)
 
-[node name="SpaceStation" type="Node3D"]
+[node name="SpaceStation" type="Node3D" groups=["starbase"]]
 script = ExtResource("1_y2xfb")
 
 [node name="SpaceStation_Container" type="Node3D" parent="."]
@@ -308,5 +310,34 @@ skeleton = NodePath("../..")
 [node name="CollisionShape3D" type="CollisionShape3D" parent="LandingZone"]
 transform = Transform3D(0.98552, 0, 0.169556, 0, 1, 0, -0.169556, 0, 0.98552, 0, 0, 0)
 shape = SubResource("BoxShape3D_5xp70")
+
+[node name="TargetReticles" type="Node3D" parent="."]
+script = ExtResource("3_e81dr")
+
+[node name="TargetReticle" type="TextureRect" parent="TargetReticles"]
+modulate = Color(1, 1, 0.509804, 0.552941)
+offset_right = 40.0
+offset_bottom = 40.0
+texture = ExtResource("4_4aco8")
+
+[node name="MainReticle" type="TextureRect" parent="TargetReticles"]
+modulate = Color(0.0705882, 0.490196, 0.235294, 0.6)
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="OffscreenReticle" type="TextureRect" parent="TargetReticles"]
+modulate = Color(0.351375, 0.758363, 0.639129, 0.392157)
+offset_right = 40.0
+offset_bottom = 40.0
+pivot_offset = Vector2(32, 32)
+texture = ExtResource("4_4aco8")
+
+[node name="Info" type="Label" parent="TargetReticles"]
+visible = false
+offset_right = 82.0
+offset_bottom = 23.0
+text = "Starbase-6"
+
+[node name="Scannable" type="Node3D" parent="."]
 
 [connection signal="body_entered" from="LandingZone" to="." method="_on_landing_zone_body_entered"]
