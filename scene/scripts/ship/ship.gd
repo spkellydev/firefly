@@ -2,7 +2,7 @@ class_name Ship extends CharacterBody3D
 
 @export var max_speed := 50.0
 @export var throttle := 15.0
-@export var max_pitch := 30
+@export var max_pitch := 90
 @export var max_yaw := 40
 @export var max_roll := 90
 @export var acceleration := 0.6
@@ -111,6 +111,8 @@ func _process(delta):
 		
 	if horizon_lock.is_colliding():
 		var collider : Node3D = horizon_lock.get_collider() as Node3D
+		if collider.is_in_group("planetoid"):
+			print("bingo baby oh yeah")
 		
 	move(delta)
 	if get_parent().name == "LandingZone":

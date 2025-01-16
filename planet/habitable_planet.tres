@@ -73,7 +73,7 @@ use_first_layer_as_mask = true
 
 [resource]
 script = ExtResource("3_jvk2m")
-radius = 3000
+radius = 1500
 resolution = 150
 planet_noise = Array[ExtResource("2_cssfc")]([SubResource("Resource_06735"), SubResource("Resource_qi2dy")])
 biomes = Array[ExtResource("1_at4kl")]([SubResource("Resource_bfwp0"), SubResource("Resource_qyhrr"), SubResource("Resource_j21un")])
@@ -81,5 +81,5 @@ biome_noise = SubResource("FastNoiseLite_t0psg")
 biome_amplitude = 2.0
 biome_offset = 0.5
 biome_blend = 3.0
-min_height = 5193.12
-max_height = 6392.76
+min_height = 2596.56
+max_height = 3196.38
