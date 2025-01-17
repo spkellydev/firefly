@@ -9,6 +9,7 @@ var is_paused
 @export var gravitational_constant = 0.0000000000674
 
 @export var celestial_body_path = []
+@export var spacestation_coords : Vector3 = Vector3.ZERO
 
 func _ready():
 	pass

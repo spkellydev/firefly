@@ -10,6 +10,10 @@ class_name Ship extends CharacterBody3D
 @export var roll_speed := 0.1
 @export var yaw_speed := 0.1
 @export var input_response := 1
+@export var arrow_target : Node3D
+
+var turbo = 3000.0
+var turbo_acc = 350.0
 
 var response_time = 0.0
 var forward_speed = 0.0
@@ -23,6 +27,8 @@ var in_orbit : bool = false
 @onready var flames_left : Flames = $ShipBody/FlamesLeft;
 @onready var flames_right : Flames = $ShipBody/FlamesRight;
 @onready var horizon_lock = $HorizonLock
+@onready var arrow = $Arrow
+var in_turbo = false
 #@onready var path_follow_3d = %PathFollow3D
 
 var bullet : PackedScene= load("res://scene/scripts/ship/bullet.tscn")
@@ -32,6 +38,7 @@ const BACKWARD_RATIO = 0.5;
 
 func _ready():
 	DockingManager.landing_zone_activated.connect(_handle_docking)
+	arrow.target = arrow_target
 	
 func _handle_docking(_1, _2):
 	in_orbit = true
@@ -51,6 +58,17 @@ func _input(_event : InputEvent):
 		if forward_speed != 0.0:
 			forward_speed = lerp(forward_speed, 0.0, 0.9)
 			acceleration = 0.0
+	if Input.is_action_just_pressed("turbo"):
+		if $TurboTimer.is_stopped():
+			var max = max_speed
+			var amax = throttle
+			max_speed = turbo
+			throttle = turbo_acc
+			$TurboTimer.start()
+			await $TurboTimer.timeout
+			max_speed = max
+			throttle = amax
+		
 	if Input.is_action_pressed("throttle"):
 		if forward_speed < forward_speed + throttle:
 			acceleration = 0.6
@@ -114,12 +132,12 @@ func rotate_ship(p, y, r):
 func _physics_process(_delta):
 	if Input.is_mouse_button_pressed(MOUSE_BUTTON_LEFT):
 		bullet_instance = bullet.instantiate()
-		bullet_instance.transform.basis = %WeaponRight.transform.basis
-		$BulletsFired.add_child(bullet_instance)
+		bullet_instance.transform.basis = transform.basis
+		get_parent().add_child(bullet_instance)
 		bullet_instance.global_position = %WeaponRight.global_position
 		bullet_instance = bullet.instantiate()
-		bullet_instance.transform.basis = %WeaponLeft.transform.basis
-		$BulletsFired.add_child(bullet_instance)
+		bullet_instance.transform.basis = transform.basis
+		get_parent().add_child(bullet_instance)
 		bullet_instance.global_position = %WeaponLeft.global_position
 
 func _process(delta):

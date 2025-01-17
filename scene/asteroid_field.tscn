@@ -1,47 +1,8 @@
-[gd_scene load_steps=29 format=3 uid="uid://bgcrur6hi75cm"]
+[gd_scene load_steps=24 format=3 uid="uid://bgcrur6hi75cm"]
 
-[ext_resource type="Texture2D" uid="uid://d3w32ge402igv" path="res://panorama/purple_nebula.png" id="1_yv2ow"]
-[ext_resource type="Script" path="res://UI.gd" id="2_mkohf"]
-[ext_resource type="PackedScene" uid="uid://doj10d1ep56ef" path="res://scene/scripts/ship/ship.tscn" id="3_j38sr"]
+[ext_resource type="Script" path="res://asteroids/asteroid.gd" id="3_o5lye"]
 [ext_resource type="Texture2D" uid="uid://bs434tf7q80lm" path="res://assets/asteroids_-_low_poly_0.png" id="4_nnebe"]
 [ext_resource type="Script" path="res://asteroids/AsteroidField.gd" id="4_sqg1q"]
-
-[sub_resource type="Shader" id="Shader_u05t7"]
-code = "
-// NOTE: Shader automatically converted from Godot Engine 4.2.2.stable's PanoramaSkyMaterial.
-
-shader_type sky;
-
-uniform sampler2D source_panorama : filter_linear, source_color, hint_default_black;
-uniform sampler2D noise_panorama : filter_linear, source_color, hint_default_black;
-
-void sky() {
-	// rotate
-	vec2 c = SKY_COORDS;
-	c.x += TIME * 0.001;
-	COLOR = texture(source_panorama, SKY_COORDS).rgb + 0.2 * texture(noise_panorama, SKY_COORDS).rgb;
-}
-"
-
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_5nooq"]
-shader = SubResource("Shader_u05t7")
-shader_parameter/source_panorama = ExtResource("1_yv2ow")
-shader_parameter/noise_panorama = ExtResource("1_yv2ow")
-
-[sub_resource type="Sky" id="Sky_kg5co"]
-sky_material = SubResource("ShaderMaterial_5nooq")
-
-[sub_resource type="Environment" id="Environment_d0rbq"]
-background_mode = 2
-background_energy_multiplier = 0.8
-sky = SubResource("Sky_kg5co")
-glow_enabled = true
-glow_bloom = 0.2
-glow_blend_mode = 1
-adjustment_enabled = true
-adjustment_brightness = 1.05
-adjustment_contrast = 1.05
-adjustment_saturation = 1.3
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_d2tvq"]
 resource_name = "Asteroid"
@@ -82,6 +43,8 @@ _surfaces = [{
 }]
 blend_shape_mode = 0
 shadow_mesh = SubResource("ArrayMesh_23yc5")
+
+[sub_resource type="PhysicsMaterial" id="PhysicsMaterial_5f88s"]
 
 [sub_resource type="SphereShape3D" id="SphereShape3D_32dey"]
 
@@ -266,112 +229,87 @@ shadow_mesh = SubResource("ArrayMesh_moefh")
 [sub_resource type="SphereShape3D" id="SphereShape3D_5c41g"]
 
 [node name="AsteroidField" type="Node3D"]
-
-[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
-environment = SubResource("Environment_d0rbq")
-
-[node name="UI" type="Control" parent="."]
-layout_mode = 3
-anchors_preset = 0
-offset_right = 40.0
-offset_bottom = 40.0
-script = ExtResource("2_mkohf")
-
-[node name="Follower" type="Label" parent="UI"]
-layout_mode = 0
-offset_left = 549.0
-offset_top = 3.0
-offset_right = 828.0
-offset_bottom = 26.0
-
-[node name="Speed" type="Label" parent="UI"]
-layout_mode = 0
-offset_left = 93.0
-offset_top = -1.0
-offset_right = 188.0
-offset_bottom = 34.0
-
-[node name="OwnShip" type="Label" parent="UI"]
-layout_mode = 0
-offset_left = 245.0
-offset_top = 1.0
-offset_right = 483.0
-offset_bottom = 24.0
-
-[node name="Ore" type="Label" parent="UI"]
-layout_mode = 0
-offset_left = -1.0
-offset_right = 100.0
-offset_bottom = 39.0
-
-[node name="Ship" parent="." groups=["player", "ship"] instance=ExtResource("3_j38sr")]
-max_speed = 20.0
-throttle = 5.0
-max_pitch = 30
-
-[node name="AsteroidField" type="Node3D" parent="." node_paths=PackedStringArray("target")]
 script = ExtResource("4_sqg1q")
-target = NodePath("../Ship")
 
-[node name="AsteroidPool" type="Node3D" parent="AsteroidField"]
+[node name="AsteroidPool" type="Node3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 21.7424, 120.632)
 
-[node name="purple_asteroid" type="MeshInstance3D" parent="AsteroidField/AsteroidPool"]
+[node name="purple_asteroid" type="MeshInstance3D" parent="AsteroidPool"]
 transform = Transform3D(1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, 0, 0.484629, 3.13015e-07)
 mesh = SubResource("ArrayMesh_epy8f")
 skeleton = NodePath("")
+script = ExtResource("3_o5lye")
 
-[node name="asteroid_collider" type="StaticBody3D" parent="AsteroidField/AsteroidPool/purple_asteroid"]
+[node name="asteroid_collider" type="StaticBody3D" parent="AsteroidPool/purple_asteroid"]
+disable_mode = 1
+collision_layer = 3
+collision_mask = 3
+physics_material_override = SubResource("PhysicsMaterial_5f88s")
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="AsteroidField/AsteroidPool/purple_asteroid/asteroid_collider"]
+[node name="CollisionShape3D" type="CollisionShape3D" parent="AsteroidPool/purple_asteroid/asteroid_collider"]
 shape = SubResource("SphereShape3D_32dey")
 
-[node name="green_asteroid" type="MeshInstance3D" parent="AsteroidField/AsteroidPool"]
+[node name="green_asteroid" type="MeshInstance3D" parent="AsteroidPool"]
 transform = Transform3D(1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, 1.5, 0.465552, 1.03373e-16)
 mesh = SubResource("ArrayMesh_lug3c")
 skeleton = NodePath("")
+script = ExtResource("3_o5lye")
 
-[node name="asteroid_collider" type="StaticBody3D" parent="AsteroidField/AsteroidPool/green_asteroid"]
+[node name="asteroid_collider" type="StaticBody3D" parent="AsteroidPool/green_asteroid"]
+collision_layer = 3
+collision_mask = 3
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="AsteroidField/AsteroidPool/green_asteroid/asteroid_collider"]
+[node name="CollisionShape3D" type="CollisionShape3D" parent="AsteroidPool/green_asteroid/asteroid_collider"]
 shape = SubResource("SphereShape3D_j3aal")
 
-[node name="brown_asteroid" type="MeshInstance3D" parent="AsteroidField/AsteroidPool"]
+[node name="brown_asteroid" type="MeshInstance3D" parent="AsteroidPool"]
 transform = Transform3D(1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, 1.5, 2, 5.92498e-08)
 mesh = SubResource("ArrayMesh_a0ewe")
 skeleton = NodePath("")
+script = ExtResource("3_o5lye")
 
-[node name="asteroid_collider" type="StaticBody3D" parent="AsteroidField/AsteroidPool/brown_asteroid"]
+[node name="asteroid_collider" type="StaticBody3D" parent="AsteroidPool/brown_asteroid"]
+collision_layer = 3
+collision_mask = 3
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="AsteroidField/AsteroidPool/brown_asteroid/asteroid_collider"]
+[node name="CollisionShape3D" type="CollisionShape3D" parent="AsteroidPool/brown_asteroid/asteroid_collider"]
 shape = SubResource("SphereShape3D_wy4fa")
 
-[node name="gray_asteroid" type="MeshInstance3D" parent="AsteroidField/AsteroidPool"]
+[node name="gray_asteroid" type="MeshInstance3D" parent="AsteroidPool"]
 transform = Transform3D(1, 0, 0, 0, 1, -4.37114e-08, 0, 4.37114e-08, 1, -1.58989, 0.457214, -1.96805e-08)
 mesh = SubResource("ArrayMesh_531ps")
 skeleton = NodePath("")
+script = ExtResource("3_o5lye")
 
-[node name="asteroid_collider" type="StaticBody3D" parent="AsteroidField/AsteroidPool/gray_asteroid"]
+[node name="asteroid_collider" type="StaticBody3D" parent="AsteroidPool/gray_asteroid"]
+collision_layer = 3
+collision_mask = 3
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="AsteroidField/AsteroidPool/gray_asteroid/asteroid_collider"]
+[node name="CollisionShape3D" type="CollisionShape3D" parent="AsteroidPool/gray_asteroid/asteroid_collider"]
 shape = SubResource("SphereShape3D_7wuk8")
 
-[node name="sea_asteroid" type="MeshInstance3D" parent="AsteroidField/AsteroidPool"]
+[node name="sea_asteroid" type="MeshInstance3D" parent="AsteroidPool"]
 transform = Transform3D(1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, -1.4701, 2, 3.24348e-07)
 mesh = SubResource("ArrayMesh_xsrut")
 skeleton = NodePath("")
+script = ExtResource("3_o5lye")
 
-[node name="asteroid_collider" type="StaticBody3D" parent="AsteroidField/AsteroidPool/sea_asteroid"]
+[node name="asteroid_collider" type="StaticBody3D" parent="AsteroidPool/sea_asteroid"]
+collision_layer = 3
+collision_mask = 3
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="AsteroidField/AsteroidPool/sea_asteroid/asteroid_collider"]
+[node name="CollisionShape3D" type="CollisionShape3D" parent="AsteroidPool/sea_asteroid/asteroid_collider"]
 shape = SubResource("SphereShape3D_kiun0")
 
-[node name="purplegreen_asteroid" type="MeshInstance3D" parent="AsteroidField/AsteroidPool"]
+[node name="purplegreen_asteroid" type="MeshInstance3D" parent="AsteroidPool"]
 transform = Transform3D(1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, 0, 2, 4.44089e-16)
 mesh = SubResource("ArrayMesh_wojjb")
 skeleton = NodePath("")
+script = ExtResource("3_o5lye")
 
-[node name="asteroid_collider" type="StaticBody3D" parent="AsteroidField/AsteroidPool/purplegreen_asteroid"]
+[node name="asteroid_collider" type="StaticBody3D" parent="AsteroidPool/purplegreen_asteroid"]
+collision_layer = 3
+collision_mask = 3
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="AsteroidField/AsteroidPool/purplegreen_asteroid/asteroid_collider"]
+[node name="CollisionShape3D" type="CollisionShape3D" parent="AsteroidPool/purplegreen_asteroid/asteroid_collider"]
 shape = SubResource("SphereShape3D_5c41g")

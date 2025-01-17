@@ -4,7 +4,6 @@ class_name Planet extends RigidBody3D
 var G = 6.6743 * pow(10, -2)
 @export var initial_velocity = Vector3.ZERO
 @export var is_star := false
-@onready var planet_trail = $PlanetTrail
 
 var predicted_path := []
 @export var planet_data : PlanetData:
@@ -68,3 +67,14 @@ func on_data_change():
 	planet_data.min_height = 99999.0
 	planet_data.max_height = 0.0
 	propagate_call("regenerate_mesh", [planet_data])
+
+
+func _on_orbit_barrier_body_entered(body : Node3D):
+	if body.is_in_group("player"):
+		body.reparent(self)
+
+
+
+func _on_orbit_barrier_body_exited(body):
+	if body.is_in_group("player"):
+		body.reparent(get_parent().get_parent())

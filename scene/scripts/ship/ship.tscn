@@ -26,46 +26,6 @@ material = SubResource("StandardMaterial3D_2wkjk")
 radius = 150.0
 height = 300.0
 
-[sub_resource type="Animation" id="Animation_01slo"]
-resource_name = "scan"
-length = 3.0
-tracks/0/type = "value"
-tracks/0/imported = false
-tracks/0/enabled = true
-tracks/0/path = NodePath("AsteroidScannerArea/CollisionShape3D:shape:radius")
-tracks/0/interp = 1
-tracks/0/loop_wrap = true
-tracks/0/keys = {
-"times": PackedFloat32Array(0, 1.5, 3),
-"transitions": PackedFloat32Array(1, 1, 1),
-"update": 0,
-"values": [0.001, 150.0, 0.001]
-}
-tracks/1/type = "value"
-tracks/1/imported = false
-tracks/1/enabled = true
-tracks/1/path = NodePath("AsteroidScannerArea/EnergyField:mesh:radius")
-tracks/1/interp = 1
-tracks/1/loop_wrap = true
-tracks/1/keys = {
-"times": PackedFloat32Array(0, 1.5, 3),
-"transitions": PackedFloat32Array(1, 1, 1),
-"update": 0,
-"values": [0.001, 150.0, 0.001]
-}
-tracks/2/type = "value"
-tracks/2/imported = false
-tracks/2/enabled = true
-tracks/2/path = NodePath("AsteroidScannerArea/EnergyField:mesh:height")
-tracks/2/interp = 1
-tracks/2/loop_wrap = true
-tracks/2/keys = {
-"times": PackedFloat32Array(0, 1.5, 3),
-"transitions": PackedFloat32Array(1, 1, 1),
-"update": 0,
-"values": [0.001, 300.0, 0.001]
-}
-
 [sub_resource type="Animation" id="Animation_ubi6o"]
 length = 0.001
 tracks/0/type = "value"
@@ -103,6 +63,46 @@ tracks/2/keys = {
 "transitions": PackedFloat32Array(1),
 "update": 0,
 "values": [300.0]
+}
+
+[sub_resource type="Animation" id="Animation_01slo"]
+resource_name = "scan"
+length = 3.0
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("AsteroidScannerArea/CollisionShape3D:shape:radius")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 1.5, 3),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 0,
+"values": [0.001, 1500.0, 0.001]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("AsteroidScannerArea/EnergyField:mesh:radius")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0, 1.5, 3),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 0,
+"values": [0.001, 1500.0, 0.001]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("AsteroidScannerArea/EnergyField:mesh:height")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0, 1.5, 3),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 0,
+"values": [0.001, 1500.0, 0.001]
 }
 
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_dxp7h"]
@@ -308,12 +308,11 @@ max_pitch = 180
 pitch_speed = 5
 yaw_speed = 0.01
 
-[node name="BulletsFired" type="Node3D" parent="."]
-
 [node name="AsteroidScanner" type="Node3D" parent="."]
 script = ExtResource("2_5h2sh")
 
 [node name="AsteroidScannerArea" type="Area3D" parent="AsteroidScanner"]
+collision_layer = 0
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="AsteroidScanner/AsteroidScannerArea"]
 shape = SubResource("SphereShape3D_8fk6n")
@@ -323,6 +322,7 @@ disabled = true
 mesh = SubResource("SphereMesh_ewhpx")
 
 [node name="AsteroidScannerArea_Max" type="Area3D" parent="AsteroidScanner"]
+collision_layer = 0
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="AsteroidScanner/AsteroidScannerArea_Max"]
 shape = SubResource("SphereShape3D_8fk6n")
@@ -407,7 +407,7 @@ texture = ExtResource("7_j5byt")
 [node name="Inventory" type="Node3D" parent="."]
 
 [node name="RayCast3D" type="RayCast3D" parent="."]
-target_position = Vector3(0, 0, -20)
+target_position = Vector3(0, 0, 20)
 collide_with_areas = true
 debug_shape_custom_color = Color(0.647059, 0.203922, 0.831373, 1)
 debug_shape_thickness = 5
@@ -421,6 +421,12 @@ far = 20000.0
 
 [node name="Timer" type="Timer" parent="."]
 autostart = true
+
+[node name="BulletsFired" type="Node3D" parent="."]
+
+[node name="TurboTimer" type="Timer" parent="."]
+wait_time = 4.0
+one_shot = true
 
 [connection signal="body_entered" from="AsteroidScanner/AsteroidScannerArea" to="AsteroidScanner" method="_on_asteroid_scanner_area_body_entered"]
 [connection signal="body_exited" from="AsteroidScanner/AsteroidScannerArea" to="AsteroidScanner" method="_on_asteroid_scanner_area_body_exited"]

@@ -5,3 +5,7 @@ class_name OrbitAnchor extends Node3D
 func _physics_process(_delta):
 	#rotate_y(deg_to_rad(rotation_speed / 360.0))
 	pass
+
+
+func _on_orbit_barrier_body_exited(body):
+	pass # Replace with function body.
