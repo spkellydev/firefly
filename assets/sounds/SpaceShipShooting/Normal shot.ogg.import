@@ -1,0 +1,19 @@
+[remap]
+
+importer="oggvorbisstr"
+type="AudioStreamOggVorbis"
+uid="uid://dc31vyhmh6dwd"
+path="res://.godot/imported/Normal shot.ogg-a933b0bea6fb84f0c8fdd4a6260e0154.oggvorbisstr"
+
+[deps]
+
+source_file="res://assets/sounds/SpaceShipShooting/Normal shot.ogg"
+dest_files=["res://.godot/imported/Normal shot.ogg-a933b0bea6fb84f0c8fdd4a6260e0154.oggvorbisstr"]
+
+[params]
+
+loop=false
+loop_offset=0
+bpm=0
+beat_count=0
+bar_beats=4

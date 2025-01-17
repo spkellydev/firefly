@@ -1,4 +1,4 @@
-extends MeshInstance3D
+extends Node3D
 var been_collected = false
 var id : int
 
@@ -18,6 +18,9 @@ func _on_area_3d_body_entered(body):
 	if body.is_in_group("player") and !been_collected:
 		been_collected = true
 		if !Inventory.ore.has(id):
+			visible = false
+			$AudioStreamPlayer.play()
 			Inventory.ore_count += ore_data.amount
 			Inventory.ore[id] = ore_data
+			await $AudioStreamPlayer.finished
 		queue_free()

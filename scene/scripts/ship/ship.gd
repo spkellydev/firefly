@@ -28,6 +28,7 @@ var in_orbit : bool = false
 @onready var flames_right : Flames = $ShipBody/FlamesRight;
 @onready var horizon_lock = $HorizonLock
 @onready var arrow = $Arrow
+
 var in_turbo = false
 #@onready var path_follow_3d = %PathFollow3D
 
@@ -60,13 +61,13 @@ func _input(_event : InputEvent):
 			acceleration = 0.0
 	if Input.is_action_just_pressed("turbo"):
 		if $TurboTimer.is_stopped():
-			var max = max_speed
+			var maxs = max_speed
 			var amax = throttle
 			max_speed = turbo
 			throttle = turbo_acc
 			$TurboTimer.start()
 			await $TurboTimer.timeout
-			max_speed = max
+			max_speed = maxs
 			throttle = amax
 		
 	if Input.is_action_pressed("throttle"):
@@ -141,13 +142,17 @@ func _physics_process(_delta):
 		bullet_instance.global_position = %WeaponLeft.global_position
 
 func _process(delta):
+	if !$AudioStreamPlayer.playing:
+		$AudioStreamPlayer.play()
+		
 	if !in_orbit:
 		rotate_ship(pitch(), yaw(), roll())
 		
 	if horizon_lock.is_colliding():
-		var collider : Node3D = horizon_lock.get_collider() as Node3D
-		if collider.is_in_group("planetoid"):
-			print("bingo baby oh yeah")
+		#var collider : Node3D = horizon_lock.get_collider() as Node3D
+		#if collider.is_in_group("planetoid"):
+		#	print("bingo baby oh yeah")
+		pass
 	if response_time > 1.0:
 		Inventory.own_ship = global_position
 		response_time = 0.0

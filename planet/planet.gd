@@ -19,12 +19,12 @@ func _ready():
 	predicted_path = []
 	on_data_change()
 
-func calculate_gravity(position): 
+func calculate_gravity(p): 
 	var total_force = Vector3() 
 	for other_body in Globals.celestial_bodies: 
 		if other_body != self: 
 			var other_body_mass = other_body.mass 
-			var direction = position - other_body.position 
+			var direction = p - other_body.position 
 			var distance = direction.length() 
 			var force_mag = gravity_scale * ((mass * other_body_mass) / (distance * distance)) 
 			var force = direction.normalized() * force_mag 

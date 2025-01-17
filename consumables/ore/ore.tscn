@@ -2,16 +2,8 @@
 
 [ext_resource type="Script" path="res://consumables/ore/ore.gd" id="1_myuo2"]
 [ext_resource type="Script" path="res://consumables/ore/OreData.gd" id="2_ym40w"]
-
-[sub_resource type="BoxMesh" id="BoxMesh_6c8aq"]
-size = Vector3(0.25, 0.25, 0.25)
-
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_2ykjb"]
-transparency = 1
-metallic = 1.0
-metallic_specular = 1.0
-emission_enabled = true
-emission = Color(0.756863, 0.580392, 0, 1)
+[ext_resource type="PackedScene" uid="uid://f5uoy1n0vdqs" path="res://assets/space_stuff/rocks/glowing_rock.tscn" id="3_1m2rp"]
+[ext_resource type="AudioStream" uid="uid://bplpyppxn0fmb" path="res://assets/sounds/consumable/key_pickup.wav" id="4_u8s6s"]
 
 [sub_resource type="Resource" id="Resource_qwian"]
 script = ExtResource("2_ym40w")
@@ -21,9 +13,7 @@ amount = 1
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_3fnys"]
 
-[node name="Reward" type="MeshInstance3D"]
-mesh = SubResource("BoxMesh_6c8aq")
-surface_material_override/0 = SubResource("StandardMaterial3D_2ykjb")
+[node name="Ore" type="Node3D"]
 script = ExtResource("1_myuo2")
 ore_data = SubResource("Resource_qwian")
 
@@ -31,5 +21,12 @@ ore_data = SubResource("Resource_qwian")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Area3D"]
 shape = SubResource("BoxShape3D_3fnys")
+
+[node name="GlowingRock" parent="." instance=ExtResource("3_1m2rp")]
+transform = Transform3D(0.002, 0, 0, 0, 0.002, 0, 0, 0, 0.002, 0, 0, -0.431703)
+
+[node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("4_u8s6s")
+mix_target = 2
 
 [connection signal="body_entered" from="Area3D" to="." method="_on_area_3d_body_entered"]

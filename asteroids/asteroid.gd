@@ -1,8 +1,12 @@
 extends MeshInstance3D
 const REWARD = preload("res://consumables/ore/ore.tscn")
 var count = 0
+const SFX : AudioStreamWAV = preload("res://assets/sounds/impact/8bit_bomb_explosion.wav")
 
 func hit_bullet():
+	get_parent().get_node("AudioStreamPlayer").stream = SFX
+	get_parent().get_node("AudioStreamPlayer").play()
+	
 	if has_meta("ore"):
 		# hacky way to prevent multiple spawns from process call
 		if count > 0:
@@ -19,5 +23,5 @@ func _ready():
 
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
-func _process(delta):
+func _process(_delta):
 	pass

@@ -25,6 +25,7 @@ Inventory="*res://autoload/inventory.gd"
 DockingManager="*res://autoload/docking_manager.gd"
 Globals="*res://autoload/globals.gd"
 Draw3d="*res://autoload/draw3d.gd"
+AudioManager="*res://autoload/audio_manager.tscn"
 
 [input]
 

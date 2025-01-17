@@ -12,8 +12,8 @@ func _ready():
 			var asteroid : MeshInstance3D = a.duplicate()
 			# add the collider to the asteroid group
 			asteroid.get_child(0).add_to_group("asteroid")
-			var scale = randi_range(50, 500)
-			asteroid.scale = Vector3(scale,scale,scale)
+			var s = randi_range(50, 500)
+			asteroid.scale = Vector3(s,s,s)
 			var has_ore = randi_range(1, 100)
 			if has_ore > 70:
 				asteroid.set_meta("ore", 1)

@@ -7,6 +7,9 @@ const SPEED = 1200.0
 
 var has_collided = false
 
+func _ready():
+	$AudioStreamPlayer.play()
+
 func _physics_process(delta):
 	position += transform.basis * Vector3(0, 0, SPEED) * delta
 	if has_collided:

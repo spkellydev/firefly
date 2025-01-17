@@ -204,7 +204,7 @@ amplitude = 0.5
 noise_map = SubResource("FastNoiseLite_mop47")
 use_first_layer_as_mask = true
 
-[sub_resource type="Resource" id="Resource_q402o"]
+[sub_resource type="Resource" id="Resource_5m0u6"]
 resource_local_to_scene = true
 script = ExtResource("8_3f8ds")
 radius = 75
@@ -221,7 +221,7 @@ max_height = 157.121
 [sub_resource type="SphereShape3D" id="SphereShape3D_cawu4"]
 radius = 150.0
 
-[sub_resource type="Resource" id="Resource_kaoos"]
+[sub_resource type="Resource" id="Resource_53ju7"]
 resource_local_to_scene = true
 script = ExtResource("8_3f8ds")
 radius = 75
@@ -306,7 +306,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -9232.64, 215.95, -8692.12)
 mass = 100.0
 linear_velocity = Vector3(1, 0, 0)
 initial_velocity = Vector3(1, 0, 0)
-planet_data = SubResource("Resource_q402o")
+planet_data = SubResource("Resource_5m0u6")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="SolarSystem/OrbitalZone/MoonOrbit/Moon"]
 shape = SubResource("SphereShape3D_cawu4")
@@ -321,7 +321,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 34893.5, 215.95, -275.695)
 mass = 100.0
 linear_velocity = Vector3(1, 0, 0)
 initial_velocity = Vector3(1, 0, 0)
-planet_data = SubResource("Resource_kaoos")
+planet_data = SubResource("Resource_53ju7")
 
 [node name="CollisionShape3D2" type="CollisionShape3D" parent="SolarSystem/OrbitalZone/Moon2Orbit/Moon"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -57812.7, 0, 244.605)

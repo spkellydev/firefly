@@ -7,5 +7,5 @@ func _physics_process(_delta):
 	pass
 
 
-func _on_orbit_barrier_body_exited(body):
+func _on_orbit_barrier_body_exited(_body):
 	pass # Replace with function body.

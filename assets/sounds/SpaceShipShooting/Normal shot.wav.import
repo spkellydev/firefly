@@ -1,0 +1,24 @@
+[remap]
+
+importer="wav"
+type="AudioStreamWAV"
+uid="uid://i3axyq1a3gix"
+path="res://.godot/imported/Normal shot.wav-fbd55b326d612d8a26326849c7038387.sample"
+
+[deps]
+
+source_file="res://assets/sounds/SpaceShipShooting/Normal shot.wav"
+dest_files=["res://.godot/imported/Normal shot.wav-fbd55b326d612d8a26326849c7038387.sample"]
+
+[params]
+
+force/8_bit=false
+force/mono=false
+force/max_rate=false
+force/max_rate_hz=44100
+edit/trim=false
+edit/normalize=false
+edit/loop_mode=0
+edit/loop_begin=0
+edit/loop_end=-1
+compress/mode=0

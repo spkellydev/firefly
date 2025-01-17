@@ -1,4 +1,4 @@
-[gd_scene load_steps=32 format=3 uid="uid://doj10d1ep56ef"]
+[gd_scene load_steps=33 format=3 uid="uid://doj10d1ep56ef"]
 
 [ext_resource type="Script" path="res://scene/scripts/ship/ship.gd" id="1_jqeou"]
 [ext_resource type="Script" path="res://scene/scripts/ship/AsteroidScanner.gd" id="2_5h2sh"]
@@ -9,6 +9,7 @@
 [ext_resource type="Texture2D" uid="uid://n0w4bkuhtlcv" path="res://assets/crosshairs/crosshair180.png" id="5_k0o4p"]
 [ext_resource type="Texture2D" uid="uid://dc1je7fby2pfh" path="res://assets/crosshairs/crosshair038.png" id="6_d4hmi"]
 [ext_resource type="Texture2D" uid="uid://crc4o4via0rcb" path="res://assets/crosshairs/crosshair022.png" id="7_j5byt"]
+[ext_resource type="AudioStream" uid="uid://cihhtjfcdtoby" path="res://assets/sounds/ship/rocket_engine.001.wav" id="10_w4cvw"]
 
 [sub_resource type="SphereShape3D" id="SphereShape3D_8fk6n"]
 radius = 150.0
@@ -427,6 +428,10 @@ autostart = true
 [node name="TurboTimer" type="Timer" parent="."]
 wait_time = 4.0
 one_shot = true
+
+[node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("10_w4cvw")
+autoplay = true
 
 [connection signal="body_entered" from="AsteroidScanner/AsteroidScannerArea" to="AsteroidScanner" method="_on_asteroid_scanner_area_body_entered"]
 [connection signal="body_exited" from="AsteroidScanner/AsteroidScannerArea" to="AsteroidScanner" method="_on_asteroid_scanner_area_body_exited"]

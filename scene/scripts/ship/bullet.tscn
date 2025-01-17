@@ -1,6 +1,7 @@
-[gd_scene load_steps=7 format=3 uid="uid://cseyp8dp4cv6j"]
+[gd_scene load_steps=8 format=3 uid="uid://cseyp8dp4cv6j"]
 
 [ext_resource type="Script" path="res://scene/scripts/ship/bullet.gd" id="1_wyv3b"]
+[ext_resource type="AudioStream" uid="uid://dc31vyhmh6dwd" path="res://assets/sounds/SpaceShipShooting/Normal shot.ogg" id="2_qieak"]
 
 [sub_resource type="BoxMesh" id="BoxMesh_p7oa4"]
 size = Vector3(0.2, 0.2, 1)
@@ -50,5 +51,8 @@ draw_pass_1 = SubResource("BoxMesh_6au8h")
 wait_time = 6.0
 one_shot = true
 autostart = true
+
+[node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("2_qieak")
 
 [connection signal="timeout" from="Timer" to="." method="_on_timer_timeout"]

@@ -13,4 +13,4 @@ func _process(delta):
 	if delay > 2.0:
 		Globals.spacestation_coords = global_position
 		delay = 0.0
-	delay += delay
+	delay += delta

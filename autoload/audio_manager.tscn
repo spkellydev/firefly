@@ -1,0 +1,14 @@
+[gd_scene load_steps=3 format=3 uid="uid://bmy7og8u6s5xt"]
+
+[ext_resource type="Script" path="res://autoload/audio_manager.gd" id="1_kxjfl"]
+[ext_resource type="AudioStream" uid="uid://bs03jl3wueltg" path="res://assets/sounds/Aura-Long-Version-chosic.com_.mp3" id="2_c5u5t"]
+
+[node name="AudioManager" type="Node3D"]
+script = ExtResource("1_kxjfl")
+
+[node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("2_c5u5t")
+volume_db = -20.0
+pitch_scale = 2.0
+autoplay = true
+mix_target = 1
