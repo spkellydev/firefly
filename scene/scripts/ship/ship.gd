@@ -23,6 +23,10 @@ var in_orbit : bool = false
 @onready var flames_left : Flames = $ShipBody/FlamesLeft;
 @onready var flames_right : Flames = $ShipBody/FlamesRight;
 @onready var horizon_lock = $HorizonLock
+#@onready var path_follow_3d = %PathFollow3D
+
+var bullet : PackedScene= load("res://scene/scripts/ship/bullet.tscn")
+var bullet_instance 
 
 const BACKWARD_RATIO = 0.5;
 
@@ -39,6 +43,8 @@ func _input(_event : InputEvent):
 	if in_orbit:
 		Inventory.speed = 0.0
 		return
+		
+		
 	if Input.is_action_pressed("brake"):
 		forward_speed = lerp(forward_speed, forward_speed / 4, 0.1)
 	if Input.is_action_pressed("land"):
@@ -104,7 +110,18 @@ func rotate_ship(p, y, r):
 	ship_basis = ship_basis.orthonormalized();
 	ship_body.basis = ship_basis;
 	ship_body.scale = s;
-	
+
+func _physics_process(_delta):
+	if Input.is_mouse_button_pressed(MOUSE_BUTTON_LEFT):
+		bullet_instance = bullet.instantiate()
+		bullet_instance.transform.basis = %WeaponRight.transform.basis
+		$BulletsFired.add_child(bullet_instance)
+		bullet_instance.global_position = %WeaponRight.global_position
+		bullet_instance = bullet.instantiate()
+		bullet_instance.transform.basis = %WeaponLeft.transform.basis
+		$BulletsFired.add_child(bullet_instance)
+		bullet_instance.global_position = %WeaponLeft.global_position
+
 func _process(delta):
 	if !in_orbit:
 		rotate_ship(pitch(), yaw(), roll())
@@ -113,8 +130,11 @@ func _process(delta):
 		var collider : Node3D = horizon_lock.get_collider() as Node3D
 		if collider.is_in_group("planetoid"):
 			print("bingo baby oh yeah")
-		
+	if response_time > 1.0:
+		Inventory.own_ship = global_position
+		response_time = 0.0
 	move(delta)
+	response_time += delta
 	if get_parent().name == "LandingZone":
 		acceleration = 0.0
 	# Flames
@@ -140,3 +160,5 @@ func _process(delta):
 		#engine_material.albedo_color = Color.BLACK;
 		flames_right.speed_ratio = 0.0;
 		flames_right.speed_ratio = 0.0;
+
+

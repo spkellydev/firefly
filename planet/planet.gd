@@ -1,10 +1,12 @@
 @tool
-extends RigidBody3D
+class_name Planet extends RigidBody3D
 
 var G = 6.6743 * pow(10, -2)
 @export var initial_velocity = Vector3.ZERO
 @export var is_star := false
+@onready var planet_trail = $PlanetTrail
 
+var predicted_path := []
 @export var planet_data : PlanetData:
 	set(v):
 		planet_data = v
@@ -15,14 +17,40 @@ var G = 6.6743 * pow(10, -2)
 
 func _ready():
 	linear_velocity = initial_velocity
+	predicted_path = []
 	on_data_change()
 
+func calculate_gravity(position): 
+	var total_force = Vector3() 
+	for other_body in Globals.celestial_bodies: 
+		if other_body != self: 
+			var other_body_mass = other_body.mass 
+			var direction = position - other_body.position 
+			var distance = direction.length() 
+			var force_mag = gravity_scale * ((mass * other_body_mass) / (distance * distance)) 
+			var force = direction.normalized() * force_mag 
+			total_force += -force 
+	return total_force
+
 func apply_gravity(_delta):
+	predicted_path.clear()
+	var current_position = global_position
+	var current_velocity = linear_velocity
+	
+	# Simulate future positions
+	for i in range(500):
+		current_velocity += calculate_gravity(current_position) * _delta / mass
+		current_position += current_velocity * _delta
+		predicted_path.append(current_position)
+
 	for other_body in Globals.celestial_bodies:
 		if other_body != self:
 			var other_body_mass = other_body.mass
 			var direction = position - other_body.position
 			var distance = direction.length()
+			
+			var idx = Globals.celestial_bodies.find(other_body)
+			Globals.celestial_body_path.append(predicted_path)
 			
 			var force_mag = gravity_scale * ((mass * other_body_mass) / (distance * distance))
 			var force = direction.normalized() * force_mag

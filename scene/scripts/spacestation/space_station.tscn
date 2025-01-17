@@ -332,12 +332,6 @@ offset_bottom = 40.0
 pivot_offset = Vector2(32, 32)
 texture = ExtResource("4_4aco8")
 
-[node name="Info" type="Label" parent="TargetReticles"]
-visible = false
-offset_right = 82.0
-offset_bottom = 23.0
-text = "Starbase-6"
-
 [node name="Scannable" type="Node3D" parent="."]
 
 [connection signal="body_entered" from="LandingZone" to="." method="_on_landing_zone_body_entered"]

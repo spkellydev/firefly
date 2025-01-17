@@ -1,12 +1,12 @@
 [gd_scene load_steps=12 format=3 uid="uid://chxlwkoma4fjy"]
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_83m3q"]
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_07lvd"]
 shading_mode = 0
 grow = true
 grow_amount = -0.1
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_fc2wn"]
-next_pass = SubResource("StandardMaterial3D_83m3q")
+next_pass = SubResource("StandardMaterial3D_07lvd")
 cull_mode = 1
 shading_mode = 0
 grow_amount = -0.1

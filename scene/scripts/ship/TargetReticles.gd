@@ -18,7 +18,7 @@ func _ready():
 	max_reticle_position = viewport_center - border_offser
 
 func _physics_process(_delta):
-	var space_state = get_world_3d().direct_space_state
+	var _space_state = get_world_3d().direct_space_state
 	var origin = camera.project_ray_origin(main_reticle.position + reticle_offset) 
 	var end = origin + camera.project_ray_normal(main_reticle.position + reticle_offset) * 40
 	var query = PhysicsRayQueryParameters3D.create(origin, end)
@@ -26,28 +26,17 @@ func _physics_process(_delta):
 	query.collide_with_areas = true
 	query.exclude = [self, get_parent()] # exclude ship and reticle from search
 	
-	var res = space_state.intersect_ray(query)
-	if "collider" in res:
-		var obj = res.collider
-		# found colliding object print(obj.name)
-		if Input.is_mouse_button_pressed(MOUSE_BUTTON_LEFT):
-			if obj.name == "asteroid_collider":
-				obj.get_parent().queue_free()
-				Inventory.asteroid_ore += 1
+	#var res = space_state.intersect_ray(query)
+	#if "collider" in res:
+#		var obj = res.collider
+#		# found colliding object print(obj.name)
+#		if Input.is_mouse_button_pressed(MOUSE_BUTTON_LEFT):
+#			if obj.name == "asteroid_collider":
+#				obj.get_parent().queue_free()
+#				Inventory.asteroid_ore += 1
 
 func maintain_lock():
 	pass
-
-func _input(_event):
-	if get_parent().has_node("Scannable"):
-		if Input.is_mouse_button_pressed(MOUSE_BUTTON_RIGHT):
-			if $Info.visible:
-				$Info.visible = false
-				return
-			else:
-				if camera.is_position_in_frustum(get_parent().global_position):
-					$Info.position = target_reticle.position + Vector2(20, 20)
-					$Info.visible = true
 
 func _process(_delta):
 	if camera.is_position_in_frustum(global_position):

@@ -1,12 +1,115 @@
-[gd_scene load_steps=21 format=3 uid="uid://doj10d1ep56ef"]
+[gd_scene load_steps=32 format=3 uid="uid://doj10d1ep56ef"]
 
 [ext_resource type="Script" path="res://scene/scripts/ship/ship.gd" id="1_jqeou"]
+[ext_resource type="Script" path="res://scene/scripts/ship/AsteroidScanner.gd" id="2_5h2sh"]
 [ext_resource type="PackedScene" uid="uid://chxlwkoma4fjy" path="res://assets/ship_controller/flames.tscn" id="2_v1d4p"]
 [ext_resource type="Script" path="res://assets/ship_controller/flames.gd" id="3_es5oa"]
+[ext_resource type="Script" path="res://scene/scripts/ship/Weapon.gd" id="4_25oav"]
 [ext_resource type="Script" path="res://scene/scripts/ship/TargetReticles.gd" id="4_rg8is"]
 [ext_resource type="Texture2D" uid="uid://n0w4bkuhtlcv" path="res://assets/crosshairs/crosshair180.png" id="5_k0o4p"]
 [ext_resource type="Texture2D" uid="uid://dc1je7fby2pfh" path="res://assets/crosshairs/crosshair038.png" id="6_d4hmi"]
 [ext_resource type="Texture2D" uid="uid://crc4o4via0rcb" path="res://assets/crosshairs/crosshair022.png" id="7_j5byt"]
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_8fk6n"]
+radius = 150.0
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_2wkjk"]
+transparency = 1
+blend_mode = 3
+shading_mode = 0
+vertex_color_use_as_albedo = true
+albedo_color = Color(1, 1, 0.411765, 0.698039)
+proximity_fade_distance = 549.95
+
+[sub_resource type="SphereMesh" id="SphereMesh_ewhpx"]
+material = SubResource("StandardMaterial3D_2wkjk")
+radius = 150.0
+height = 300.0
+
+[sub_resource type="Animation" id="Animation_01slo"]
+resource_name = "scan"
+length = 3.0
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("AsteroidScannerArea/CollisionShape3D:shape:radius")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 1.5, 3),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 0,
+"values": [0.001, 150.0, 0.001]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("AsteroidScannerArea/EnergyField:mesh:radius")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0, 1.5, 3),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 0,
+"values": [0.001, 150.0, 0.001]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("AsteroidScannerArea/EnergyField:mesh:height")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0, 1.5, 3),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 0,
+"values": [0.001, 300.0, 0.001]
+}
+
+[sub_resource type="Animation" id="Animation_ubi6o"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("AsteroidScannerArea/CollisionShape3D:shape:radius")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [150.0]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("AsteroidScannerArea/EnergyField:mesh:radius")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [150.0]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("AsteroidScannerArea/EnergyField:mesh:height")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [300.0]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_dxp7h"]
+_data = {
+"RESET": SubResource("Animation_ubi6o"),
+"scan": SubResource("Animation_01slo")
+}
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_0tx4r"]
 resource_name = "PrimaryMaterial.001"
@@ -78,6 +181,19 @@ _surfaces = [{
 "vertex_count": 48,
 "vertex_data": PackedByteArray(72, 163, 18, 64, 236, 22, 141, 63, 204, 98, 204, 63, 217, 123, 45, 64, 43, 248, 141, 62, 204, 98, 204, 63, 104, 121, 128, 63, 203, 45, 229, 62, 225, 178, 58, 63, 136, 42, 182, 63, 185, 53, 193, 190, 225, 178, 58, 63, 112, 153, 106, 64, 222, 2, 203, 63, 225, 178, 58, 63, 223, 82, 122, 64, 11, 41, 141, 63, 225, 178, 58, 63, 72, 163, 18, 64, 236, 22, 141, 63, 204, 98, 204, 63, 217, 123, 45, 64, 43, 248, 141, 62, 204, 98, 204, 63, 136, 42, 182, 191, 185, 53, 193, 190, 225, 178, 58, 63, 217, 123, 45, 192, 43, 248, 141, 62, 204, 98, 204, 63, 104, 121, 128, 191, 203, 45, 229, 62, 225, 178, 58, 63, 72, 163, 18, 192, 236, 22, 141, 63, 204, 98, 204, 63, 217, 123, 45, 192, 43, 248, 141, 62, 204, 98, 204, 63, 223, 82, 122, 192, 11, 41, 141, 63, 225, 178, 58, 63, 72, 163, 18, 192, 236, 22, 141, 63, 204, 98, 204, 63, 112, 153, 106, 192, 222, 2, 203, 63, 225, 178, 58, 63, 191, 42, 207, 63, 61, 154, 106, 61, 246, 235, 214, 192, 117, 115, 135, 63, 12, 116, 165, 190, 199, 229, 238, 192, 82, 73, 231, 63, 98, 135, 97, 190, 246, 235, 214, 192, 40, 69, 173, 63, 226, 31, 66, 191, 199, 229, 238, 192, 117, 115, 135, 63, 12, 116, 165, 190, 199, 229, 238, 192, 174, 240, 254, 62, 159, 29, 52, 191, 246, 235, 214, 192, 40, 69, 173, 63, 226, 31, 66, 191, 199, 229, 238, 192, 124, 181, 47, 63, 28, 41, 123, 191, 246, 235, 214, 192, 40, 69, 173, 191, 226, 31, 66, 191, 199, 229, 238, 192, 117, 115, 135, 191, 12, 116, 165, 190, 199, 229, 238, 192, 82, 73, 231, 191, 98, 135, 97, 190, 246, 235, 214, 192, 191, 42, 207, 191, 61, 154, 106, 61, 246, 235, 214, 192, 124, 181, 47, 191, 28, 41, 123, 191, 246, 235, 214, 192, 174, 240, 254, 190, 159, 29, 52, 191, 246, 235, 214, 192, 40, 69, 173, 191, 226, 31, 66, 191, 199, 229, 238, 192, 117, 115, 135, 191, 12, 116, 165, 190, 199, 229, 238, 192, 3, 120, 189, 63, 38, 85, 177, 63, 140, 61, 255, 192, 3, 120, 189, 63, 47, 107, 186, 62, 140, 61, 255, 192, 226, 202, 31, 64, 43, 250, 129, 63, 150, 64, 219, 192, 226, 202, 31, 64, 47, 107, 186, 62, 150, 64, 219, 192, 43, 105, 237, 62, 43, 250, 129, 63, 150, 64, 219, 192, 43, 105, 237, 62, 47, 107, 186, 62, 150, 64, 219, 192, 3, 120, 189, 63, 38, 85, 177, 63, 140, 61, 255, 192, 3, 120, 189, 63, 47, 107, 186, 62, 140, 61, 255, 192, 226, 202, 31, 192, 47, 107, 186, 62, 150, 64, 219, 192, 3, 120, 189, 191, 47, 107, 186, 62, 140, 61, 255, 192, 226, 202, 31, 192, 43, 250, 129, 63, 150, 64, 219, 192, 3, 120, 189, 191, 38, 85, 177, 63, 140, 61, 255, 192, 3, 120, 189, 191, 47, 107, 186, 62, 140, 61, 255, 192, 43, 105, 237, 190, 47, 107, 186, 62, 150, 64, 219, 192, 3, 120, 189, 191, 38, 85, 177, 63, 140, 61, 255, 192, 43, 105, 237, 190, 43, 250, 129, 63, 150, 64, 219, 192, 23, 90, 184, 108, 175, 91, 171, 235, 23, 90, 184, 108, 175, 91, 171, 235, 23, 90, 184, 108, 175, 91, 171, 235, 23, 90, 184, 108, 175, 91, 171, 235, 231, 165, 70, 147, 46, 87, 158, 237, 231, 165, 70, 147, 46, 87, 158, 237, 231, 165, 70, 147, 46, 87, 158, 237, 231, 165, 70, 147, 46, 87, 157, 237, 231, 165, 184, 108, 79, 164, 171, 235, 231, 165, 184, 108, 79, 164, 171, 235, 231, 165, 184, 108, 79, 164, 171, 235, 231, 165, 184, 108, 79, 164, 171, 235, 23, 90, 70, 147, 208, 168, 157, 237, 23, 90, 70, 147, 208, 168, 157, 237, 23, 90, 70, 147, 208, 168, 157, 237, 23, 90, 70, 147, 208, 168, 157, 237, 164, 224, 207, 209, 193, 179, 29, 102, 164, 224, 207, 209, 193, 179, 29, 102, 164, 224, 207, 209, 193, 179, 29, 102, 164, 224, 207, 209, 193, 179, 29, 102, 90, 31, 47, 46, 194, 179, 30, 102, 90, 31, 47, 46, 194, 179, 30, 102, 90, 31, 47, 46, 194, 179, 30, 102, 90, 31, 47, 46, 194, 179, 30, 102, 90, 31, 207, 209, 194, 179, 225, 25, 90, 31, 207, 209, 194, 179, 225, 25, 90, 31, 207, 209, 194, 179, 225, 25, 90, 31, 207, 209, 194, 179, 225, 25, 164, 224, 47, 46, 193, 179, 225, 25, 164, 224, 47, 46, 193, 179, 225, 25, 164, 224, 47, 46, 193, 179, 225, 25, 164, 224, 47, 46, 193, 179, 225, 25, 255, 255, 196, 188, 211, 127, 9, 128, 255, 255, 196, 188, 211, 127, 9, 128, 255, 255, 196, 188, 212, 127, 9, 128, 255, 255, 196, 188, 212, 127, 9, 128, 0, 0, 196, 188, 255, 127, 255, 255, 0, 0, 196, 188, 255, 127, 255, 255, 0, 0, 196, 188, 255, 127, 255, 255, 0, 0, 196, 188, 255, 127, 255, 255, 0, 0, 196, 188, 255, 127, 255, 255, 0, 0, 196, 188, 255, 127, 255, 255, 0, 0, 196, 188, 255, 127, 255, 255, 0, 0, 196, 188, 255, 127, 255, 255, 255, 255, 196, 188, 211, 127, 9, 128, 255, 255, 196, 188, 212, 127, 9, 128, 255, 255, 196, 188, 211, 127, 9, 128, 255, 255, 196, 188, 212, 127, 9, 128)
 }]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_83m3q"]
+shading_mode = 0
+grow = true
+grow_amount = -0.1
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_entj2"]
+next_pass = SubResource("StandardMaterial3D_83m3q")
+cull_mode = 1
+shading_mode = 0
+grow_amount = -0.1
+
+[sub_resource type="SphereMesh" id="SphereMesh_kdyui"]
 
 [sub_resource type="SphereShape3D" id="SphereShape3D_v33p8"]
 radius = 1.5
@@ -188,8 +304,37 @@ _data = {
 
 [node name="Ship" type="CharacterBody3D"]
 script = ExtResource("1_jqeou")
+max_pitch = 180
 pitch_speed = 5
 yaw_speed = 0.01
+
+[node name="BulletsFired" type="Node3D" parent="."]
+
+[node name="AsteroidScanner" type="Node3D" parent="."]
+script = ExtResource("2_5h2sh")
+
+[node name="AsteroidScannerArea" type="Area3D" parent="AsteroidScanner"]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="AsteroidScanner/AsteroidScannerArea"]
+shape = SubResource("SphereShape3D_8fk6n")
+disabled = true
+
+[node name="EnergyField" type="MeshInstance3D" parent="AsteroidScanner/AsteroidScannerArea"]
+mesh = SubResource("SphereMesh_ewhpx")
+
+[node name="AsteroidScannerArea_Max" type="Area3D" parent="AsteroidScanner"]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="AsteroidScanner/AsteroidScannerArea_Max"]
+shape = SubResource("SphereShape3D_8fk6n")
+
+[node name="EnergyField" type="MeshInstance3D" parent="AsteroidScanner/AsteroidScannerArea_Max"]
+visible = false
+mesh = SubResource("SphereMesh_ewhpx")
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="AsteroidScanner"]
+libraries = {
+"": SubResource("AnimationLibrary_dxp7h")
+}
 
 [node name="ShipBody" type="MeshInstance3D" parent="."]
 mesh = SubResource("ArrayMesh_f0aij")
@@ -203,11 +348,30 @@ script = ExtResource("3_es5oa")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.529, 0.829, -9.76596)
 script = ExtResource("3_es5oa")
 
+[node name="WeaponRight" type="Node3D" parent="ShipBody"]
+unique_name_in_owner = true
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.68003, 0.4, 2.387)
+
+[node name="WeaponRight" type="MeshInstance3D" parent="ShipBody/WeaponRight"]
+material_override = SubResource("StandardMaterial3D_entj2")
+mesh = SubResource("SphereMesh_kdyui")
+skeleton = NodePath("../..")
+
+[node name="WeaponLeft" type="Node3D" parent="ShipBody"]
+unique_name_in_owner = true
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.44592, 0.399718, 2.38723)
+
+[node name="WeaponLeft" type="MeshInstance3D" parent="ShipBody/WeaponLeft"]
+material_override = SubResource("StandardMaterial3D_entj2")
+mesh = SubResource("SphereMesh_kdyui")
+skeleton = NodePath("../..")
+script = ExtResource("4_25oav")
+
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]
 shape = SubResource("SphereShape3D_v33p8")
 
 [node name="GPUParticles3D" type="GPUParticles3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 12)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 12.8986)
 amount = 48
 visibility_aabb = AABB(-12, -8, -18, 24, 16, 24)
 process_material = SubResource("ParticleProcessMaterial_u8xhm")
@@ -243,11 +407,22 @@ texture = ExtResource("7_j5byt")
 [node name="Inventory" type="Node3D" parent="."]
 
 [node name="RayCast3D" type="RayCast3D" parent="."]
-target_position = Vector3(0, 0, 2)
+target_position = Vector3(0, 0, -20)
+collide_with_areas = true
+debug_shape_custom_color = Color(0.647059, 0.203922, 0.831373, 1)
+debug_shape_thickness = 5
 
 [node name="HorizonLock" type="RayCast3D" parent="."]
 target_position = Vector3(0, -50, 0)
 
 [node name="Camera3D" type="Camera3D" parent="."]
-transform = Transform3D(-1, 1.56314e-08, -8.60139e-08, 3.28278e-09, 0.989905, 0.141731, 8.73611e-08, 0.141731, -0.989905, -0.372544, 7.64876, -19.2066)
+transform = Transform3D(-1, 0, 8.74228e-08, 0, 1, 0, -8.74228e-08, 0, -1, 0, 10, -25)
 far = 20000.0
+
+[node name="Timer" type="Timer" parent="."]
+autostart = true
+
+[connection signal="body_entered" from="AsteroidScanner/AsteroidScannerArea" to="AsteroidScanner" method="_on_asteroid_scanner_area_body_entered"]
+[connection signal="body_exited" from="AsteroidScanner/AsteroidScannerArea" to="AsteroidScanner" method="_on_asteroid_scanner_area_body_exited"]
+[connection signal="body_entered" from="AsteroidScanner/AsteroidScannerArea_Max" to="AsteroidScanner" method="_on_asteroid_scanner_area_max_body_entered"]
+[connection signal="body_exited" from="AsteroidScanner/AsteroidScannerArea_Max" to="AsteroidScanner" method="_on_asteroid_scanner_area_max_body_exited"]

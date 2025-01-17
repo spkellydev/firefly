@@ -1,4 +1,4 @@
-[gd_scene load_steps=42 format=3 uid="uid://d0qfe71ghlydg"]
+[gd_scene load_steps=45 format=3 uid="uid://d0qfe71ghlydg"]
 
 [ext_resource type="Texture2D" uid="uid://d3w32ge402igv" path="res://panorama/purple_nebula.png" id="1_lgks0"]
 [ext_resource type="Script" path="res://scene/OrbitAnchor.gd" id="3_2ho2d"]
@@ -10,11 +10,12 @@
 [ext_resource type="Script" path="res://planet/planet.gd" id="7_1mo1a"]
 [ext_resource type="PackedScene" uid="uid://emamuktlvdqw" path="res://planet/planet.tscn" id="7_7std1"]
 [ext_resource type="Script" path="res://planet/planet_noise.gd" id="7_jyn0w"]
+[ext_resource type="Script" path="res://planet/PlanetTrail.gd" id="7_mingy"]
 [ext_resource type="Script" path="res://UI.gd" id="7_wap4y"]
 [ext_resource type="PackedScene" uid="uid://doj10d1ep56ef" path="res://scene/scripts/ship/ship.tscn" id="7_y28xk"]
 [ext_resource type="Script" path="res://planet/planet_data.gd" id="8_3f8ds"]
 
-[sub_resource type="Shader" id="Shader_u05t7"]
+[sub_resource type="Shader" id="Shader_qj5vl"]
 code = "
 // NOTE: Shader automatically converted from Godot Engine 4.2.2.stable's PanoramaSkyMaterial.
 
@@ -32,17 +33,17 @@ void sky() {
 "
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_3lnc3"]
-shader = SubResource("Shader_u05t7")
+shader = SubResource("Shader_qj5vl")
 shader_parameter/source_panorama = ExtResource("1_lgks0")
 shader_parameter/noise_panorama = ExtResource("1_lgks0")
 
-[sub_resource type="Sky" id="Sky_kg5co"]
+[sub_resource type="Sky" id="Sky_atdwd"]
 sky_material = SubResource("ShaderMaterial_3lnc3")
 
 [sub_resource type="Environment" id="Environment_xrpxq"]
 background_mode = 2
 background_energy_multiplier = 0.8
-sky = SubResource("Sky_kg5co")
+sky = SubResource("Sky_atdwd")
 glow_enabled = true
 glow_bloom = 0.2
 glow_blend_mode = 1
@@ -135,7 +136,9 @@ max_height = 0.0
 [sub_resource type="SphereShape3D" id="SphereShape3D_tms42"]
 radius = 6000.0
 
-[sub_resource type="Resource" id="Resource_58tgd"]
+[sub_resource type="ImmediateMesh" id="ImmediateMesh_h6dsy"]
+
+[sub_resource type="Resource" id="Resource_5fgyq"]
 resource_local_to_scene = true
 script = ExtResource("8_3f8ds")
 radius = 75
@@ -152,7 +155,7 @@ max_height = 157.121
 [sub_resource type="SphereShape3D" id="SphereShape3D_cawu4"]
 radius = 150.0
 
-[sub_resource type="Resource" id="Resource_fptn0"]
+[sub_resource type="Resource" id="Resource_uekkj"]
 resource_local_to_scene = true
 script = ExtResource("8_3f8ds")
 radius = 75
@@ -190,6 +193,8 @@ _data = {
 [sub_resource type="SphereShape3D" id="SphereShape3D_gn006"]
 radius = 3000.0
 
+[sub_resource type="ImmediateMesh" id="ImmediateMesh_jyc8c"]
+
 [sub_resource type="PlaneMesh" id="PlaneMesh_a4e6g"]
 size = Vector2(200, 5000)
 
@@ -223,6 +228,9 @@ directional_shadow_max_distance = 100000.0
 [node name="CollisionShape3D" type="CollisionShape3D" parent="SolarSystem/StarBody"]
 shape = SubResource("SphereShape3D_tms42")
 
+[node name="PlanetTrail" type="MeshInstance3D" parent="SolarSystem/StarBody"]
+mesh = SubResource("ImmediateMesh_h6dsy")
+
 [node name="OrbitAnchor4" type="Node3D" parent="SolarSystem"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3070.12, 0, 1063.68)
 script = ExtResource("3_2ho2d")
@@ -235,13 +243,14 @@ script = ExtResource("3_2ho2d")
 [node name="Moon" parent="SolarSystem/OrbitAnchor4/MoonOrbit" instance=ExtResource("7_7std1")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -22919.2, 215.95, -31.0896)
 mass = 100.0
-linear_velocity = Vector3(0, 0, 10)
-initial_velocity = Vector3(0, 0, 10)
-is_star = false
-planet_data = SubResource("Resource_58tgd")
+linear_velocity = Vector3(10, 0, 0)
+initial_velocity = Vector3(10, 0, 0)
+planet_data = SubResource("Resource_5fgyq")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="SolarSystem/OrbitAnchor4/MoonOrbit/Moon"]
 shape = SubResource("SphereShape3D_cawu4")
+
+[node name="PlanetTrail" type="MeshInstance3D" parent="SolarSystem/OrbitAnchor4/MoonOrbit/Moon"]
 
 [node name="Moon2Orbit" type="Node3D" parent="SolarSystem/OrbitAnchor4"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 46779, 215.95, -2973.34)
@@ -251,26 +260,24 @@ rotation_speed = 0.08
 [node name="Moon" parent="SolarSystem/OrbitAnchor4/Moon2Orbit" instance=ExtResource("7_7std1")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 34893.5, 215.95, -275.695)
 mass = 100.0
-linear_velocity = Vector3(0, 0, 10)
-initial_velocity = Vector3(0, 0, 10)
-is_star = false
-planet_data = SubResource("Resource_fptn0")
+linear_velocity = Vector3(10, 0, 0)
+initial_velocity = Vector3(10, 0, 0)
+planet_data = SubResource("Resource_uekkj")
 
 [node name="CollisionShape3D2" type="CollisionShape3D" parent="SolarSystem/OrbitAnchor4/Moon2Orbit/Moon"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -57812.7, 0, 244.605)
 shape = SubResource("SphereShape3D_cawu4")
 
+[node name="PlanetTrail" type="MeshInstance3D" parent="SolarSystem/OrbitAnchor4/Moon2Orbit/Moon"]
+
 [node name="Planet" parent="SolarSystem/OrbitAnchor4" instance=ExtResource("7_7std1")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 46779, 215.95, -2973.34)
 mass = 200.0
-linear_velocity = Vector3(0, 0, 20)
-initial_velocity = Vector3(0, 0, 20)
-is_star = false
+linear_velocity = Vector3(30, 0, 0)
+initial_velocity = Vector3(30, 0, 0)
 planet_data = ExtResource("5_844ft")
 
 [node name="SpaceStationOrbit" type="Node3D" parent="SolarSystem/OrbitAnchor4/Planet"]
-script = ExtResource("3_2ho2d")
-rotation_speed = 0.001
 
 [node name="SpaceStation" parent="SolarSystem/OrbitAnchor4/Planet/SpaceStationOrbit" instance=ExtResource("4_5u2ds")]
 transform = Transform3D(-40.4504, 0, 29.3899, 0, 50, 0, -29.3899, 0, -40.4504, -14763.6, 54.9302, -18.2751)
@@ -293,6 +300,10 @@ libraries = {
 [node name="CollisionShape3D" type="CollisionShape3D" parent="SolarSystem/OrbitAnchor4/Planet"]
 shape = SubResource("SphereShape3D_gn006")
 
+[node name="PlanetTrail" type="MeshInstance3D" parent="SolarSystem/OrbitAnchor4/Planet"]
+mesh = SubResource("ImmediateMesh_jyc8c")
+script = ExtResource("7_mingy")
+
 [node name="UI" type="Control" parent="."]
 layout_mode = 3
 anchors_preset = 0
@@ -300,15 +311,24 @@ offset_right = 40.0
 offset_bottom = 40.0
 script = ExtResource("7_wap4y")
 
-[node name="AsteroidOre" type="Label" parent="UI"]
+[node name="Follower" type="Label" parent="UI"]
 layout_mode = 0
-offset_right = 40.0
-offset_bottom = 23.0
+offset_left = 549.0
+offset_top = 3.0
+offset_right = 828.0
+offset_bottom = 26.0
 
 [node name="Speed" type="Label" parent="UI"]
 layout_mode = 0
 offset_right = 40.0
 offset_bottom = 23.0
+
+[node name="OwnShip" type="Label" parent="UI"]
+layout_mode = 0
+offset_left = 5.0
+offset_top = 143.0
+offset_right = 243.0
+offset_bottom = 166.0
 
 [node name="Plane" type="MeshInstance3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 43000, 200, -2000)
@@ -317,6 +337,6 @@ mesh = SubResource("PlaneMesh_a4e6g")
 surface_material_override/0 = SubResource("StandardMaterial3D_rir6d")
 
 [node name="Ship" parent="." groups=["ship"] instance=ExtResource("7_y28xk")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 43000, 200, -2000)
-max_speed = 1000.0
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -43708.1, 4231.39, 1913.11)
+max_speed = 3000.0
 throttle = 350.0

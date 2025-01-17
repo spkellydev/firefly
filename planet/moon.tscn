@@ -81,8 +81,6 @@ _surfaces = [{
 }]
 
 [node name="Planet" instance=ExtResource("1_likyn")]
-initial_velocity = null
-is_star = null
 
 [node name="Up" parent="." index="0"]
 mesh = SubResource("ArrayMesh_nav0r")
