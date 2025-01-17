@@ -1,4 +1,4 @@
-[gd_scene load_steps=60 format=3 uid="uid://d0qfe71ghlydg"]
+[gd_scene load_steps=61 format=3 uid="uid://d0qfe71ghlydg"]
 
 [ext_resource type="Texture2D" uid="uid://d3w32ge402igv" path="res://panorama/purple_nebula.png" id="1_lgks0"]
 [ext_resource type="Script" path="res://scene/OrbitAnchor.gd" id="3_2ho2d"]
@@ -14,6 +14,7 @@
 [ext_resource type="Script" path="res://planet/planet_data.gd" id="8_3f8ds"]
 [ext_resource type="Script" path="res://scene/scripts/ship/Arrow.gd" id="13_esx0y"]
 [ext_resource type="PackedScene" uid="uid://bgcrur6hi75cm" path="res://scene/asteroid_field.tscn" id="15_di41k"]
+[ext_resource type="Script" path="res://scene/InventoryDatabase.gd" id="15_ptk6g"]
 
 [sub_resource type="Shader" id="Shader_qj5vl"]
 code = "
@@ -204,7 +205,7 @@ amplitude = 0.5
 noise_map = SubResource("FastNoiseLite_mop47")
 use_first_layer_as_mask = true
 
-[sub_resource type="Resource" id="Resource_5m0u6"]
+[sub_resource type="Resource" id="Resource_1yrn0"]
 resource_local_to_scene = true
 script = ExtResource("8_3f8ds")
 radius = 75
@@ -221,7 +222,7 @@ max_height = 157.121
 [sub_resource type="SphereShape3D" id="SphereShape3D_cawu4"]
 radius = 150.0
 
-[sub_resource type="Resource" id="Resource_53ju7"]
+[sub_resource type="Resource" id="Resource_7hyx5"]
 resource_local_to_scene = true
 script = ExtResource("8_3f8ds")
 radius = 75
@@ -306,7 +307,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -9232.64, 215.95, -8692.12)
 mass = 100.0
 linear_velocity = Vector3(1, 0, 0)
 initial_velocity = Vector3(1, 0, 0)
-planet_data = SubResource("Resource_5m0u6")
+planet_data = SubResource("Resource_1yrn0")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="SolarSystem/OrbitalZone/MoonOrbit/Moon"]
 shape = SubResource("SphereShape3D_cawu4")
@@ -321,7 +322,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 34893.5, 215.95, -275.695)
 mass = 100.0
 linear_velocity = Vector3(1, 0, 0)
 initial_velocity = Vector3(1, 0, 0)
-planet_data = SubResource("Resource_53ju7")
+planet_data = SubResource("Resource_7hyx5")
 
 [node name="CollisionShape3D2" type="CollisionShape3D" parent="SolarSystem/OrbitalZone/Moon2Orbit/Moon"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -57812.7, 0, 244.605)
@@ -418,6 +419,9 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 43000, 200, -2000)
 visible = false
 mesh = SubResource("PlaneMesh_a4e6g")
 surface_material_override/0 = SubResource("StandardMaterial3D_rir6d")
+
+[node name="InventoryDatabase" type="Node3D" parent="."]
+script = ExtResource("15_ptk6g")
 
 [connection signal="body_entered" from="SolarSystem/OrbitalZone/Planet/OrbitBarrier" to="SolarSystem/OrbitalZone/Planet" method="_on_orbit_barrier_body_entered"]
 [connection signal="body_exited" from="SolarSystem/OrbitalZone/Planet/OrbitBarrier" to="SolarSystem/OrbitalZone/Planet" method="_on_orbit_barrier_body_exited"]

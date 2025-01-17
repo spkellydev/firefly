@@ -8,6 +8,7 @@ var id : int
 func _ready():
 	id = randi_range(0, 20000)
 	ore_data.id = id
+	ore_data.name = "IronOre"
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(_delta):
@@ -20,7 +21,6 @@ func _on_area_3d_body_entered(body):
 		if !Inventory.ore.has(id):
 			visible = false
 			$AudioStreamPlayer.play()
-			Inventory.ore_count += ore_data.amount
-			Inventory.ore[id] = ore_data
+			Inventory.update_ore(id, ore_data)
 			await $AudioStreamPlayer.finished
 		queue_free()
